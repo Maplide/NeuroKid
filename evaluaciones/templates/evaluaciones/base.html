@@ -1,0 +1,174 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}NeuroKid | Evaluaciones Psicológicas Infantiles{% endblock %}</title>
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Comfortaa:wght@500;700&display=swap" rel="stylesheet">
+  
+  <!-- AOS Animations -->
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  
+  <!-- Favicon -->
+  <link rel="icon" href="{% static 'images/favicon.ico' %}">
+  
+  <!-- Estilos personalizados -->
+  <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+  
+  {% block head %}{% endblock %}
+</head>
+<body>
+  <!-- Header con logo -->
+  <header class="main-header">
+    <div class="container">
+      <div class="header-content">
+        <div class="logo-container">
+          <img src="{% static 'images/LogoNK.png' %}" alt="NeuroKid Logo" class="logo-img">
+          <div class="logo-text">
+            <h1 class="logo-title">NeuroKid</h1>
+            <p class="logo-subtitle">Psicología Infantil Digital</p>
+          </div>
+        </div>
+        <div class="header-cta">
+          <a href="{% url 'contacto' %}" class="btn btn-cta">
+            <i class="fas fa-calendar-check"></i> Agendar Cita
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Barra de navegación principal -->
+  <nav class="navbar navbar-expand-lg main-navbar">
+    <div class="container">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="fas fa-bars"></i>
+      </button>
+      
+      <div class="collapse navbar-collapse" id="mainNav">
+        <ul class="navbar-nav mx-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'index' %}">
+              <i class="fas fa-home"></i> Inicio
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'nosotros' %}">
+              <i class="fas fa-users"></i> Nosotros
+            </a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fas fa-brain"></i> Servicios
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="servicesDropdown">
+              <li><a class="dropdown-item" href="{% url 'servicios' %}">Evaluaciones</a></li>
+              <li><a class="dropdown-item" href="#">Terapias</a></li>
+              <li><a class="dropdown-item" href="#">Talleres</a></li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'contacto' %}">
+              <i class="fas fa-envelope"></i> Contacto
+            </a>
+          </li>
+        </ul>
+        
+        <div class="nav-extra d-lg-flex">
+          <a href="{% url 'comenzar' %}" class="btn btn-login">
+            <i class="fas fa-sign-in-alt"></i> Comenzar!
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Contenido principal -->
+  <main class="main-content">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Footer -->
+  <footer class="main-footer">
+    <div class="footer-top">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-4 footer-col">
+            <div class="footer-logo">
+              <img src="{% static 'images/LogoNK.png' %}" alt="NeuroKid" class="img-fluid footer-logo-img">
+            </div>
+            <p class="footer-about text-white">
+              Plataforma especializada en evaluación psicológica infantil mediante inteligencia artificial y herramientas digitales.
+            </p>
+            <div class="footer-social">
+              <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+              <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+              <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+              <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+            </div>
+          </div>
+          
+          <div class="col-lg-4 footer-col">
+            <h3 class="footer-title">Enlaces Rápidos</h3>
+            <ul class="footer-links">
+              <li><a href="{% url 'index' %}"><i class="fas fa-chevron-right"></i> Inicio</a></li>
+              <li><a href="{% url 'nosotros' %}"><i class="fas fa-chevron-right"></i> Sobre Nosotros</a></li>
+              <li><a href="{% url 'servicios' %}"><i class="fas fa-chevron-right"></i> Servicios</a></li>
+              <li><a href="{% url 'contacto' %}"><i class="fas fa-chevron-right"></i> Contacto</a></li>
+              <li><a href="#"><i class="fas fa-chevron-right"></i> Política de Privacidad</a></li>
+            </ul>
+          </div>
+          
+          <div class="col-lg-4 footer-col">
+            <h3 class="footer-title">Contacto</h3>
+            <ul class="footer-contact">
+              <li><i class="fas fa-map-marker-alt"></i> Av. Ejemplo 123, Huancayo, Perú</li>
+              <li><i class="fas fa-phone-alt"></i> +51 987 654 321</li>
+              <li><i class="fas fa-envelope"></i> contacto@neurokid.com</li>
+              <li><i class="fas fa-clock"></i> Lun-Vie: 9:00 am - 6:00 pm</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer-bottom">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6">
+            <p class="copyright">&copy; 2025 NeuroKid. Todos los derechos reservados.</p>
+          </div>
+          <div class="col-md-6">
+            <div class="footer-legal">
+              <a href="#" class="text-white">Términos y Condiciones</a>
+              <a href="#" class="text-white">Política de Privacidad</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Botón flotante de WhatsApp -->
+  <a href="https://wa.me/51987654321" class="whatsapp-float" target="_blank">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <script src="{% static 'js/main.js' %}"></script>
+  
+  {% block scripts %}{% endblock %}
+</body>
+</html>

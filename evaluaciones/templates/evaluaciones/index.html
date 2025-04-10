@@ -1,0 +1,102 @@
+{% extends 'evaluaciones/base.html' %}
+{% load static %}
+{% block title %}Inicio | NeuroKid - Evaluaciones Psicológicas Infantiles{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="container">
+              <div class="row align-items-center">
+                <div class="col-lg-6 order-lg-1">
+                  <div class="hero-content">
+                    <h1 class="hero-title mb-4">Herramientas de Evaluación Psicológica Infantil</h1>
+                    <p class="hero-subtitle mb-4">Juegos interactivos diseñados por expertos para ayudar en la detección temprana de trastornos en niños de 4 a 11 años</p>
+                    <a href="{% url 'comenzar' %}" class="btn btn-primary btn-lg px-4 py-3">Comenzar Evaluación</a>
+                  </div>
+                </div>
+                <div class="col-lg-6 order-lg-2">
+                  <div class="hero-image">
+                    <img src="{% static 'images/Inicio1.jpg' %}" alt="Niño sonriente jugando" class="img-fluid hero-img">
+                  </div>
+                </div>
+              </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features-section py-5 my-4 bg-light rounded-3">
+            <div class="container">
+                <h2 class="section-title text-center mb-5">¿Cómo funciona NeuroKid?</h2>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="feature-card p-4 h-100">
+                            <div class="feature-icon mb-3 text-primary" style="font-size: 2.5rem;">🎮</div>
+                            <h3 class="h4 mb-3">Juegos Interactivos</h3>
+                            <p class="mb-0">Evaluaciones diseñadas como juegos para que los niños participen con naturalidad</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="feature-card p-4 h-100">
+                            <div class="feature-icon mb-3 text-primary" style="font-size: 2.5rem;">⚡</div>
+                            <h3 class="h4 mb-3">Resultados Rápidos</h3>
+                            <p class="mb-0">Informes automáticos con análisis preliminares basados en IA</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="feature-card p-4 h-100">
+                            <div class="feature-icon mb-3 text-primary" style="font-size: 2.5rem;">📊</div>
+                            <h3 class="h4 mb-3">Herramientas Profesionales</h3>
+                            <p class="mb-0">Diseñado por psicólogos infantiles para psicólogos</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Games Preview -->
+        <section class="games-section py-5 my-4">
+            <div class="container">
+                <h2 class="section-title text-center mb-3">Nuestros Juegos de Evaluación</h2>
+                <p class="section-description text-center mb-5">Diseñados específicamente para diferentes rangos de edad y áreas de desarrollo</p>
+                
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="game-card h-100 shadow-sm rounded overflow-hidden">
+                            <img src="{% static 'images/juego1.jpg' %}" alt="Juego de memoria" class="img-fluid w-100" style="height: 200px; object-fit: cover;">
+                            <div class="game-info p-4">
+                                <h3 class="h4">Memoria Visual</h3>
+                                <p class="mb-1"><strong>Edad:</strong> 4-7 años</p>
+                                <p class="mb-0">Evalúa capacidad de atención y memoria a corto plazo</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="game-card h-100 shadow-sm rounded overflow-hidden">
+                            <img src="{% static 'images/juego2.jpg' %}" alt="Juego de patrones" class="img-fluid w-100" style="height: 200px; object-fit: cover;">
+                            <div class="game-info p-4">
+                                <h3 class="h4">Reconocimiento de Patrones</h3>
+                                <p class="mb-1"><strong>Edad:</strong> 6-11 años</p>
+                                <p class="mb-0">Analiza habilidades de razonamiento lógico</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Puedes añadir más juegos -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="cta-section py-5 my-4 bg-primary text-white rounded-3">
+            <div class="container text-center">
+                <h2 class="mb-3">¿Listo para comenzar?</h2>
+                <p class="mb-4">Regístrate ahora o inicia sesión para acceder a todas las herramientas</p>
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="{% url 'comenzar' %}" class="btn btn-light btn-lg px-4">Comenzar Evaluación</a>
+                    <a href="#" class="btn btn-outline-light btn-lg px-4">Más Información</a>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}    
+    

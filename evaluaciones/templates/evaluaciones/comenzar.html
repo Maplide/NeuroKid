@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container text-center mt-5">
+    <h2>Bienvenido</h2>
+    <p>Elige cómo quieres empezar:</p>
+    
+    <a href="{% url 'login' %}" class="btn btn-success">Iniciar Sesión</a>
+    <a href="{% url 'perfil_libre' %}" class="btn btn-secondary">Entrar como Libre</a>
+</div>
+{% endblock %}

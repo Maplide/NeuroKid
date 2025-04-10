@@ -1,0 +1,231 @@
+{% extends 'evaluaciones/base.html' %}
+{% load static %}
+
+{% block title %}Nuestros Servicios de Evaluación Psicológica | NeuroKid{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="services-hero">
+    <div class="container">
+        <div class="hero-content">
+            <h1>Servicios Especializados en Psicología Infantil</h1>
+            <p class="lead">Evaluaciones precisas y personalizadas para niños de 4 a 11 años</p>
+            <a href="#contact" class="btn btn-primary btn-lg">Solicitar Información</a>
+        </div>
+    </div>
+</section>
+
+<!-- Main Content -->
+<div class="container">
+    <!-- Service Overview -->
+    <section class="service-overview py-5">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h2 class="section-title">Nuestro Enfoque Integral</h2>
+                <p class="service-text">En NeuroKid combinamos <strong>tecnología de vanguardia</strong> con <strong>expertise psicológico</strong> para ofrecer evaluaciones completas del desarrollo infantil.</p>
+                
+                <div class="service-features">
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-child"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h4>Enfoque Centrado en el Niño</h4>
+                            <p>Evaluaciones gamificadas que los niños disfrutan mientras aprenden</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h4>Tecnología Avanzada</h4>
+                            <p>Plataforma con IA que analiza múltiples parámetros de desarrollo</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h4>Informes Detallados</h4>
+                            <p>Resultados claros y accionables para padres y profesionales</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6">
+                <div class="service-image-container">
+                    <img src="{% static 'images/Servicio1.jpg' %}" alt="Evaluación psicológica infantil" class="img-fluid service-image">
+                    <div class="image-badge">
+                        <span>Método Validado Científicamente</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Section -->
+    <section class="ai-section py-5 my-5">
+        <div class="row align-items-center">
+            <div class="col-lg-6 order-lg-2">
+                <h2 class="section-title">Inteligencia Artificial al Servicio del Desarrollo Infantil</h2>
+                <p>Nuestros algoritmos analizan más de <strong>50 parámetros de comportamiento</strong> para identificar patrones relevantes en áreas como:</p>
+                
+                <div class="ai-features">
+                    <div class="ai-feature-box">
+                        <i class="fas fa-language"></i>
+                        <span>Desarrollo del lenguaje</span>
+                    </div>
+                    <div class="ai-feature-box">
+                        <i class="fas fa-cogs"></i>
+                        <span>Habilidades cognitivas</span>
+                    </div>
+                    <div class="ai-feature-box">
+                        <i class="fas fa-hands-helping"></i>
+                        <span>Interacción social</span>
+                    </div>
+                    <div class="ai-feature-box">
+                        <i class="fas fa-heart"></i>
+                        <span>Desarrollo emocional</span>
+                    </div>
+                </div>
+                
+                <div class="ai-note mt-4">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <p>Nuestra IA <strong>complementa pero no reemplaza</strong> la evaluación profesional. Todos los resultados son revisados por nuestro equipo de psicólogos infantiles.</p>
+                </div>
+            </div>
+            
+            <div class="col-lg-6 order-lg-1">
+                <div class="ai-visual">
+                    <img src="{% static 'images/ai-analysis.jpg' %}" alt="Análisis con IA" class="img-fluid rounded">
+                    <div class="ai-process">
+                        <div class="process-step">
+                            <div class="step-number">1</div>
+                            <p>Recolección de datos mediante juegos interactivos</p>
+                        </div>
+                        <div class="process-step">
+                            <div class="step-number">2</div>
+                            <p>Análisis de patrones con algoritmos especializados</p>
+                        </div>
+                        <div class="process-step">
+                            <div class="step-number">3</div>
+                            <p>Generación de informe preliminar</p>
+                        </div>
+                        <div class="process-step">
+                            <div class="step-number">4</div>
+                            <p>Revisión y validación por psicólogo especializado</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Service Packages -->
+    <section class="packages-section py-5">
+        <h2 class="section-title text-center mb-5">Nuestros Paquetes de Evaluación</h2>
+        
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="package-card basic">
+                    <h3>Evaluación Básica</h3>
+                    <div class="price">$99<span>/sesión</span></div>
+                    <ul class="package-features">
+                        <li><i class="fas fa-check"></i> 2 juegos de evaluación</li>
+                        <li><i class="fas fa-check"></i> Informe básico de resultados</li>
+                        <li><i class="fas fa-check"></i> Análisis automatizado</li>
+                        <li><i class="fas fa-times"></i> Sin revisión profesional</li>
+                    </ul>
+                    <a href="#" class="btn btn-outline-primary">Seleccionar</a>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-4">
+                <div class="package-card standard">
+                    <div class="popular-badge">Más Popular</div>
+                    <h3>Evaluación Estándar</h3>
+                    <div class="price">$199<span>/sesión</span></div>
+                    <ul class="package-features">
+                        <li><i class="fas fa-check"></i> 5 juegos de evaluación</li>
+                        <li><i class="fas fa-check"></i> Informe detallado</li>
+                        <li><i class="fas fa-check"></i> Análisis con IA</li>
+                        <li><i class="fas fa-check"></i> Revisión por psicólogo</li>
+                    </ul>
+                    <a href="#" class="btn btn-primary">Seleccionar</a>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-4">
+                <div class="package-card premium">
+                    <h3>Seguimiento Completo</h3>
+                    <div class="price">$499<span>/paquete</span></div>
+                    <ul class="package-features">
+                        <li><i class="fas fa-check"></i> Evaluación inicial completa</li>
+                        <li><i class="fas fa-check"></i> 3 sesiones de seguimiento</li>
+                        <li><i class="fas fa-check"></i> Informe evolutivo</li>
+                        <li><i class="fas fa-check"></i> Recomendaciones personalizadas</li>
+                    </ul>
+                    <a href="#" class="btn btn-outline-primary">Seleccionar</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials py-5 my-5">
+        <h2 class="section-title text-center mb-5">Lo que dicen los profesionales</h2>
+        
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <p>"NeuroKid ha transformado mi práctica clínica. La precisión de sus evaluaciones me permite detectar problemas semanas antes que con métodos tradicionales."</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <img src="{% static 'images/testimonial1.jpg' %}" alt="Dra. Laura Gómez">
+                        <div>
+                            <h5>Dra. Laura Gómez</h5>
+                            <span>Psicóloga Infantil - 15 años de experiencia</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 mb-4">
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <p>"Como terapeuta ocupacional, valoro especialmente los datos objetivos que proporciona NeuroKid. Los informes son claros y me ayudan a diseñar mejores intervenciones."</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <img src="{% static 'images/testimonial2.jpg' %}" alt="Lic. Carlos Mendez">
+                        <div>
+                            <h5>Lic. Carlos Méndez</h5>
+                            <span>Terapeuta Ocupacional Infantil</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section id="contact" class="cta-section text-center py-5">
+        <h2>¿Listo para comenzar?</h2>
+        <p class="lead">Contáctanos para más información sobre nuestros servicios</p>
+        
+        <div class="cta-actions">
+            <a href="tel:+123456789" class="btn btn-primary btn-lg">
+                <i class="fas fa-phone"></i> Llamar ahora
+            </a>
+            <a href="mailto:info@neurokid.com" class="btn btn-outline-primary btn-lg">
+                <i class="fas fa-envelope"></i> Enviar email
+            </a>
+        </div>
+    </section>
+</div>
+{% endblock %}

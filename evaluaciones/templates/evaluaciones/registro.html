@@ -1,0 +1,29 @@
+{% extends 'evaluaciones/base.html' %}
+{% load static %}
+
+{% block title %}Registro | NeuroKid{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h2>Registro / Ingreso como Invitado</h2>
+
+        <p>¿Te gustaría registrarte o jugar como invitado?</p>
+
+        <form method="POST" class="form-inline">
+            {% csrf_token %}
+            <!-- Registro Formulario -->
+            <div class="form-group">
+                <label for="nombre">Nombre:</label>
+                <input type="text" name="nombre" required class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="email">Correo electrónico:</label>
+                <input type="email" name="email" required class="form-control">
+            </div>
+
+            <button type="submit" class="btn btn-success">Registrar</button>
+        </form>
+
+        <p>O <a href="{% url 'perfil_invitado' %}">continuar como invitado</a></p>
+    </div>
+{% endblock %}

@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*.sqlite3
+*.log
+
+# Django
+db.sqlite3
+*.pyc
+
+# VSCode
+.vscode/
+
+# Environments
+venv/
+env/
+ENV/
+*.env
+
+# Docker
+*.pid
+
+# Migrations (opcional, si no quieres subirlas)
+*/migrations/__pycache__/
+*/migrations/*.pyc
+
+# Static/media (si se generan en producción)
+staticfiles/
+media/

@@ -1,0 +1,169 @@
+{% extends 'evaluaciones/base.html' %}
+{% load static %}
+
+{% block title %}Conoce nuestro equipo | NeuroKid{% endblock %}
+
+{% block content %}
+<div class="about-page">
+    <!-- Hero Banner -->
+    <section class="about-hero bg-purple">
+        <div class="container h-100">
+            <div class="row h-100 align-items-center">
+                <div class="col-lg-8 mx-auto text-center">
+                    <h1 class="hero-title text-white mb-4">Nuestro Compromiso con el Desarrollo Infantil</h1>
+                    <p class="hero-subtitle text-light">Tecnología y psicología infantil trabajando juntas para un futuro más saludable</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container py-5">
+        <!-- Quiénes Somos -->
+        <section class="about-section py-5">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <div class="about-image-wrapper position-relative">
+                        <img src="{% static 'images/Nosotros1.jpeg' %}" alt="Equipo NeuroKid" class="img-fluid rounded shadow-lg about-img">
+                        <div class="img-border-decoration"></div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="ps-lg-5">
+                        <h2 class="section-title mb-4">¿Quiénes Somos?</h2>
+                        <div class="about-content">
+                            <p class="lead">En <strong class="text-purple">NeuroKid</strong>, hemos creado una plataforma innovadora que combina <strong>psicología infantil</strong> con <strong>tecnología de vanguardia</strong>.</p>
+                            
+                            <p class="mb-4">Nuestro equipo multidisciplinario está formado por profesionales comprometidos con el desarrollo infantil:</p>
+                            <ul class="team-list list-unstyled">
+                                <li class="mb-3 d-flex align-items-start">
+                                    <i class="fas fa-user-md text-purple me-3 mt-1"></i>
+                                    <span>Psicólogos infantiles con más de 15 años de experiencia</span>
+                                </li>
+                                <li class="mb-3 d-flex align-items-start">
+                                    <i class="fas fa-code text-purple me-3 mt-1"></i>
+                                    <span>Desarrolladores especializados en tecnología educativa</span>
+                                </li>
+                                <li class="mb-3 d-flex align-items-start">
+                                    <i class="fas fa-brain text-purple me-3 mt-1"></i>
+                                    <span>Expertos en inteligencia artificial aplicada a la salud</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Nuestro Enfoque -->
+        <section class="approach-section py-5 bg-light rounded-3 mb-5">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-10 text-center">
+                        <h2 class="section-title mb-5">Nuestro Enfoque Científico</h2>
+                        <div class="row g-4">
+                            <div class="col-md-4">
+                                <div class="approach-step p-4 h-100">
+                                    <div class="step-number bg-purple text-white rounded-circle mx-auto mb-4">1</div>
+                                    <h3 class="h4 mb-3">Evaluación Gamificada</h3>
+                                    <p class="mb-0">Juegos diseñados por expertos que evalúan habilidades cognitivas de forma natural.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="approach-step p-4 h-100">
+                                    <div class="step-number bg-purple text-white rounded-circle mx-auto mb-4">2</div>
+                                    <h3 class="h4 mb-3">Análisis con IA</h3>
+                                    <p class="mb-0">Nuestros algoritmos analizan más de 50 parámetros de comportamiento.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="approach-step p-4 h-100">
+                                    <div class="step-number bg-purple text-white rounded-circle mx-auto mb-4">3</div>
+                                    <h3 class="h4 mb-3">Informe Profesional</h3>
+                                    <p class="mb-0">Resultados claros con sugerencias de intervención para psicólogos.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Misión y Visión -->
+        <section class="mission-vision-section py-5 mb-5">
+            <div class="row g-4">
+                <div class="col-lg-6">
+                    <div class="mission-card p-4 p-lg-5 h-100 bg-light rounded-3">
+                        <div class="d-flex align-items-center mb-4">
+                            <div class="mission-icon bg-purple bg-opacity-10 text-purple rounded-circle p-3 me-4">
+                                <i class="fas fa-bullseye fa-2x"></i>
+                            </div>
+                            <h3 class="mb-0">Misión</h3>
+                        </div>
+                        <p class="mb-0">Proporcionar herramientas tecnológicas avanzadas para la detección temprana de trastornos del desarrollo, facilitando evaluaciones precisas y proporcionando orientación especializada.</p>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="vision-card p-4 p-lg-5 h-100 bg-light rounded-3">
+                        <div class="d-flex align-items-center mb-4">
+                            <div class="vision-icon bg-purple bg-opacity-10 text-purple rounded-circle p-3 me-4">
+                                <i class="fas fa-rocket fa-2x"></i>
+                            </div>
+                            <h3 class="mb-0">Visión</h3>
+                        </div>
+                        <p class="mb-0">Ser la plataforma líder en evaluación del desarrollo infantil, mejorando la calidad de vida de millones de niños mediante soluciones innovadoras y científicamente respaldadas.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Equipo -->
+        <section class="team-section py-5 mb-5">
+            <div class="container">
+                <h2 class="section-title text-center mb-5">Conoce a Nuestro Equipo</h2>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="team-member text-center p-4 h-100">
+                            <div class="team-img-wrapper mx-auto mb-4">
+                                <img src="{% static 'images/team1.jpg' %}" alt="Dra. Laura Méndez" class="img-fluid rounded-circle">
+                            </div>
+                            <h3 class="h4">Dra. Laura Méndez</h3>
+                            <p class="text-purple mb-2">Psicóloga Infantil</p>
+                            <p class="mb-0">Especialista en desarrollo cognitivo con 18 años de experiencia en diagnóstico temprano.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="team-member text-center p-4 h-100">
+                            <div class="team-img-wrapper mx-auto mb-4">
+                                <img src="{% static 'images/team2.jpg' %}" alt="Ing. Carlos Ruiz" class="img-fluid rounded-circle">
+                            </div>
+                            <h3 class="h4">Ing. Carlos Ruiz</h3>
+                            <p class="text-purple mb-2">Desarrollador IA</p>
+                            <p class="mb-0">Experto en machine learning aplicado a comportamiento humano.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="team-member text-center p-4 h-100">
+                            <div class="team-img-wrapper mx-auto mb-4">
+                                <img src="{% static 'images/team3.jpg' %}" alt="Lic. Ana Torres" class="img-fluid rounded-circle">
+                            </div>
+                            <h3 class="h4">Lic. Ana Torres</h3>
+                            <p class="text-purple mb-2">Diseñadora Educativa</p>
+                            <p class="mb-0">Especialista en gamificación y experiencias de aprendizaje para niños.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="cta-section bg-purple text-white py-5 rounded-3">
+            <div class="container text-center">
+                <h2 class="mb-3">¿Listo para probar NeuroKid?</h2>
+                <p class="lead mb-4">Únete a cientos de profesionales que ya están transformando sus evaluaciones</p>
+                <a href="{% url 'comenzar' %}" class="btn btn-light btn-lg px-4">Comenzar ahora</a>
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}
