@@ -2,6 +2,10 @@
 {% load static %}
 {% block title %}Inicio | NeuroKid - Evaluaciones Psicológicas Infantiles{% endblock %}
 
+{% block head %}
+  <link rel="stylesheet" href="{% static 'css/pages/index.css' %}">
+{% endblock %}
+
 {% block content %}
     <div class="container">
         <!-- Hero Section -->
@@ -87,7 +91,7 @@
         </section>
 
         <!-- Call to Action -->
-        <section class="cta-section py-5 my-4 bg-primary text-white rounded-3">
+        <section class="cta-section py-5 my-4 text-white rounded-3">
             <div class="container text-center">
                 <h2 class="mb-3">¿Listo para comenzar?</h2>
                 <p class="mb-4">Regístrate ahora o inicia sesión para acceder a todas las herramientas</p>

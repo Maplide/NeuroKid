@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
 
+{% block head %}
+  <link rel="stylesheet" href="{% static 'css/pages/perfil.css' %}">
+{% endblock %}
+
 {% block content %}
 <div class="container mt-5 text-center">
     <h2>Perfil de {{ nombre }}</h2>

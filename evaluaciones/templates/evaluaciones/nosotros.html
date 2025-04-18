@@ -3,18 +3,19 @@
 
 {% block title %}Conoce nuestro equipo | NeuroKid{% endblock %}
 
+{% block head %}
+  <link rel="stylesheet" href="{% static 'css/pages/nosotros.css' %}">
+{% endblock %}
+
 {% block content %}
-<div class="about-page">
-    <!-- Hero Banner -->
-    <section class="about-hero bg-purple">
-        <div class="container h-100">
-            <div class="row h-100 align-items-center">
-                <div class="col-lg-8 mx-auto text-center">
-                    <h1 class="hero-title text-white mb-4">Nuestro Compromiso con el Desarrollo Infantil</h1>
-                    <p class="hero-subtitle text-light">Tecnología y psicología infantil trabajando juntas para un futuro más saludable</p>
-                </div>
+
+    <!-- Hero Section -->
+    <section class="services-hero text-white text-center">
+            <div class="container py-5">
+                <h1 class="hero-title mb-3">Servicios Especializados en Psicología Infantil</h1>
+                <p class="hero-subtitle mb-4">Evaluaciones precisas y personalizadas para niños de 4 a 11 años</p>
+                <a href="#contact" class="btn btn-light btn-lg">Solicitar Información</a>
             </div>
-        </div>
     </section>
 
     <!-- Main Content -->
@@ -91,27 +92,29 @@
 
         <!-- Misión y Visión -->
         <section class="mission-vision-section py-5 mb-5">
-            <div class="row g-4">
-                <div class="col-lg-6">
-                    <div class="mission-card p-4 p-lg-5 h-100 bg-light rounded-3">
-                        <div class="d-flex align-items-center mb-4">
-                            <div class="mission-icon bg-purple bg-opacity-10 text-purple rounded-circle p-3 me-4">
-                                <i class="fas fa-bullseye fa-2x"></i>
+            <div class="container">
+                <div class="row gx-4 gy-4">
+                    <div class="col-12 col-md-6">
+                        <div class="mission-card p-4 h-100 bg-light rounded-3">
+                            <div class="d-flex align-items-center mb-4">
+                                <div class="mission-icon me-3">
+                                    <i class="fas fa-bullseye"></i>
+                                </div>
+                                <h3 class="mb-0">Misión</h3>
                             </div>
-                            <h3 class="mb-0">Misión</h3>
+                            <p class="mb-0">Proporcionar herramientas tecnológicas avanzadas para la detección temprana…</p>
                         </div>
-                        <p class="mb-0">Proporcionar herramientas tecnológicas avanzadas para la detección temprana de trastornos del desarrollo, facilitando evaluaciones precisas y proporcionando orientación especializada.</p>
                     </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="vision-card p-4 p-lg-5 h-100 bg-light rounded-3">
-                        <div class="d-flex align-items-center mb-4">
-                            <div class="vision-icon bg-purple bg-opacity-10 text-purple rounded-circle p-3 me-4">
-                                <i class="fas fa-rocket fa-2x"></i>
+                    <div class="col-12 col-md-6">
+                        <div class="vision-card p-4 h-100 bg-light rounded-3">
+                            <div class="d-flex align-items-center mb-4">
+                                <div class="vision-icon me-3">
+                                    <i class="fas fa-rocket"></i>
+                                </div>
+                                <h3 class="mb-0">Visión</h3>
                             </div>
-                            <h3 class="mb-0">Visión</h3>
+                            <p class="mb-0">Ser la plataforma líder en evaluación del desarrollo infantil…</p>
                         </div>
-                        <p class="mb-0">Ser la plataforma líder en evaluación del desarrollo infantil, mejorando la calidad de vida de millones de niños mediante soluciones innovadoras y científicamente respaldadas.</p>
                     </div>
                 </div>
             </div>
@@ -157,11 +160,14 @@
         </section>
 
         <!-- CTA -->
-        <section class="cta-section bg-purple text-white py-5 rounded-3">
+        <section class="cta-section py-5 my-4 rounded-3">
             <div class="container text-center">
                 <h2 class="mb-3">¿Listo para probar NeuroKid?</h2>
                 <p class="lead mb-4">Únete a cientos de profesionales que ya están transformando sus evaluaciones</p>
-                <a href="{% url 'comenzar' %}" class="btn btn-light btn-lg px-4">Comenzar ahora</a>
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="{% url 'comenzar' %}" class="btn btn-light btn-lg px-4">Comenzar Evaluación</a>
+                    <a href="#" class="btn btn-outline-light btn-lg px-4">Más Información</a>
+                </div>
             </div>
         </section>
     </div>

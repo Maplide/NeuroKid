@@ -1,0 +1,178 @@
+/* ----------------------------------------------------------
+   VARIABLES LOCALES (solo si no las tienes ya en base.css)
+---------------------------------------------------------- */
+:root {
+  --purple-dark: #4a148c;
+  --purple: #6a1b9a;
+  --purple-light: #9c27b0;
+  --bg-light: #f3e5f5;
+  --text-light: #757575;
+}
+
+/* ----------------------------------------------------------
+   HERO BANNER (sobre el .about-hero)
+---------------------------------------------------------- */
+.services-hero {
+  position: relative;
+  padding: 6rem 0;
+  background: linear-gradient(
+    135deg,
+    var(--primary-dark),
+    var(--primary-color)
+  );
+  overflow: hidden;
+}
+
+.services-hero::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.25);
+  z-index: 1;
+}
+
+/* Aseguramos que el contenido quede sobre el overlay */
+.services-hero .container,
+.services-hero .hero-title,
+.services-hero .hero-subtitle,
+.services-hero .btn-light {
+  position: relative;
+  z-index: 2;
+}
+
+/* Ajustes de texto y botón */
+.services-hero .hero-title {
+  color: var(--text-white);
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 700;
+}
+
+.services-hero .hero-subtitle {
+  color: var(--text-white);
+  font-size: 1.2rem;
+  opacity: 1;
+}
+
+.services-hero .btn-light {
+  border-radius: 50px;
+  padding: .75rem 2rem;
+  font-weight: 600;
+}
+
+/* ----------------------------------------------------------
+   “¿Quiénes Somos?” – texto e imagen
+---------------------------------------------------------- */
+.about-section .section-title {
+  color: var(--purple-dark);
+  margin-bottom: 1.5rem;
+}
+.about-img {
+  border-radius: .75rem;
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.15);
+  transition: transform .3s ease;
+}
+.about-img:hover {
+  transform: scale(1.02);
+}
+
+/* ----------------------------------------------------------
+   LISTA DE EQUIPO (íconos + texto)
+---------------------------------------------------------- */
+.team-list li {
+  font-size: 1.05rem;
+  line-height: 1.5;
+  color: var(--text-light);
+  transition: color .3s ease;
+}
+.team-list li:hover {
+  color: var(--purple);
+}
+
+/* ----------------------------------------------------------
+   SECCIÓN “Nuestro Enfoque” (approach-section)
+---------------------------------------------------------- */
+.approach-section {
+  background-color: var(--bg-light);
+  padding: 4rem 0;
+  border-radius: .75rem;
+}
+.approach-step {
+  background: #fff;
+  border: 1px solid var(--border-color);
+  border-radius: .75rem;
+  transition: transform .3s ease, box-shadow .3s ease;
+}
+.approach-step:hover {
+  transform: translateY(-.5rem);
+  box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.1);
+}
+.step-number {
+  width: 3rem; height: 3rem;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700;
+}
+
+/* ----------------------------------------------------------
+   Misión / Visión (mission-vision-section)
+---------------------------------------------------------- */
+.mission-vision-section .mission-card,
+.mission-vision-section .vision-card {
+  background: #fff;
+  border: 1px solid var(--border-color);
+  transition: transform .3s ease, box-shadow .3s ease;
+}
+.mission-vision-section .mission-card:hover,
+.mission-vision-section .vision-card:hover {
+  transform: translateY(-.5rem);
+  box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.1);
+}
+
+.mission-card, .vision-card {
+  transition: transform .3s ease, box-shadow .3s ease;
+}
+.mission-card:hover, .vision-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+.mission-icon,
+.vision-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  background: var(--purple-light);
+  color: var(--text-white);
+  border-radius: 50%;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+/* ----------------------------------------------------------
+   SECCIÓN “Conoce a Nuestro Equipo”
+---------------------------------------------------------- */
+.team-section .team-member {
+  background: #fff;
+  border: 1px solid var(--border-color);
+  border-radius: 1rem;
+  transition: transform .3s ease, box-shadow .3s ease;
+}
+.team-section .team-member:hover {
+  transform: translateY(-.5rem);
+  box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.1);
+}
+.team-member .img-fluid {
+  width: 140px; height: 140px;
+  object-fit: cover;
+  border: 4px solid var(--bg-light);
+  margin-bottom: 1rem;
+}
+
+/* ----------------------------------------------------------
+   UTILES
+---------------------------------------------------------- */
+.text-purple { color: var(--purple) !important; }
+.bg-purple { background: var(--purple) !important; }
+.bg-light { background: var(--bg-light) !important; }

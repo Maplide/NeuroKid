@@ -1,0 +1,205 @@
+.services-hero {
+  position: relative;
+  padding: 6rem 0;
+  background: linear-gradient(
+    135deg,
+    var(--primary-dark),
+    var(--primary-color)
+  );
+  overflow: hidden;
+}
+
+.services-hero::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.25);
+  z-index: 1;
+}
+
+/* Aseguramos que el contenido quede sobre el overlay */
+.services-hero .container,
+.services-hero .hero-title,
+.services-hero .hero-subtitle,
+.services-hero .btn-light {
+  position: relative;
+  z-index: 2;
+}
+
+/* Ajustes de texto y botón */
+.services-hero .hero-title {
+  color: var(--text-white);
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 700;
+}
+
+.services-hero .hero-subtitle {
+  color: var(--text-white);
+  font-size: 1.2rem;
+  opacity: 1;
+}
+
+.services-hero .btn-light {
+  border-radius: 50px;
+  padding: .75rem 2rem;
+  font-weight: 600;
+}
+
+/* = Layout principal = */
+.contact-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: start;
+  margin: 3rem 0;
+}
+@media (max-width: 992px) {
+  .contact-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* = Formulario = */
+.contact-form-container {
+  background: var(--bg-white);
+  padding: 2.5rem 2rem;
+  border-radius: .75rem;
+  box-shadow: 0 1rem 2rem rgba(0,0,0,0.05);
+}
+.contact-form-container .section-title {
+  margin-bottom: .5rem;
+}
+.contact-form-container .section-subtitle {
+  margin-bottom: 1.5rem;
+  color: var(--text-light);
+}
+
+/* Inputs con icono */
+.contact-form .form-group {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+.contact-form label {
+  display: block;
+  margin-bottom: .3rem;
+  font-weight: 600;
+}
+.contact-form input,
+.contact-form select,
+.contact-form textarea {
+  width: 100%;
+  padding: .75rem 1rem .75rem 3.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: .5rem;
+  transition: border-color .3s;
+}
+.contact-form i {
+  position: absolute;
+  top: 50%; left: 1rem;
+  transform: translateY(-50%);
+  color: var(--primary-color);
+}
+.contact-form input:focus,
+.contact-form select:focus,
+.contact-form textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+.form-submit {
+  text-align: center;
+}
+.form-submit .submit-btn {
+  background: var(--primary-color);
+  color: var(--text-white);
+  padding: .75rem 2rem;
+  border-radius: 50px;
+  font-weight: 600;
+  transition: background .3s, transform .3s;
+}
+.form-submit .submit-btn:hover {
+  background: var(--primary-light);
+  transform: translateY(-2px);
+}
+
+/* = Información de contacto = */
+.contact-info-container {
+  background: var(--bg-white);
+  padding: 2.5rem 2rem;
+  border-radius: .75rem;
+  box-shadow: 0 1rem 2rem rgba(0,0,0,0.05);
+}
+.contact-info-container .section-title {
+  margin-bottom: .5rem;
+}
+.contact-info-container .section-subtitle {
+  margin-bottom: 1.5rem;
+  color: var(--text-light);
+}
+.info-card {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+.info-icon {
+  flex-shrink: 0;
+  width: 3rem; height: 3rem;
+  background: var(--accent-color);
+  color: var(--text-white);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+}
+.info-content h3 {
+  margin-bottom: .3rem;
+  color: var(--primary-color);
+}
+.info-content p {
+  margin: 0;
+  color: var(--text-color);
+}
+
+/* = Redes sociales = */
+.contact-social {
+  margin-top: 2rem;
+  text-align: center;
+}
+.contact-social h3 {
+  margin-bottom: .75rem;
+}
+.social-icons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+.social-icon {
+  width: 2.5rem; height: 2.5rem;
+  background: var(--bg-light);
+  color: var(--primary-dark);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .3s, transform .3s;
+}
+.social-icon:hover {
+  background: var(--accent-color);
+  transform: translateY(-2px);
+}
+
+/* = Mapa = */
+.map-container {
+  margin-top: 2rem;
+  border-radius: .75rem;
+  overflow: hidden;
+  box-shadow: 0 1rem 2rem rgba(0,0,0,0.05);
+}
+.map-container iframe {
+  width: 100%;
+  height: 450px;
+  border: none;
+}
