@@ -1,10 +1,13 @@
 # evaluaciones/views.py
-
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import login as auth_login, authenticate
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
 from .models import Perfil, Nino, Especialista, Juego, IntentoJuego, Resultado, Evaluacion
+
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+import json
 
 def index(request):
     return render(request, 'evaluaciones/index.html')
@@ -86,3 +89,20 @@ def juego_memoria(request):
 
 def comenzar(request):
     return render(request, 'evaluaciones/comenzar.html')
+
+def juego_emo_match(request):
+    return render(request, 'evaluaciones/games/game_emo_match.html')
+
+@csrf_exempt
+def api_registrar_intento(request):
+    if request.method == "POST" and request.user.is_authenticated:
+        data = json.loads(request.body)
+        juego = Juego.objects.get(nombre="Emo‑Match")  # Ajusta según tu modelo
+        nino = Nino.objects.get(email=request.user.email)
+        IntentoJuego.objects.create(
+            juego=juego,
+            nino=nino,
+            resultado=data["intentos"]
+        )
+        return JsonResponse({"status": "ok"})
+    return JsonResponse({"error": "no autorizado"}, status=403)

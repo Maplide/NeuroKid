@@ -110,12 +110,10 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
-
-USE_I18N = True
-
+LANGUAGE_CODE = 'es-pe'           # Español (Perú)
+TIME_ZONE = 'America/Lima'        # Zona horaria de Perú
+USE_I18N = True                   # Internacionalización activada
+USE_L10N = True                   # Formato de fechas y números localizados
 USE_TZ = True
 
 
@@ -123,6 +121,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Durante el desarrollo, también busca en la carpeta /static de tu repo
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
+
+# Para producción (collectstatic)
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

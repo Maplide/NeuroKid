@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views  # Importa todas las vistas del archivo views.py
+from .views import juego_emo_match
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -20,4 +21,8 @@ urlpatterns = [
     path('perfil/', views.perfil, name='perfil'),
     # Perfil de un niño concreto
     path('perfil/<int:nino_id>/', views.perfil, name='perfil'),
+
+    path('games/emo_match/', views.juego_emo_match, name='juego_emo_match'),
+
+    path('api/registro_intento/', views.api_registrar_intento, name='api_registro_intento'),
 ]

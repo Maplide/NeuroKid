@@ -1,0 +1,49 @@
+{% extends 'evaluaciones/base.html' %}
+{% load static %}
+
+{% block title %}EmoMatch | NeuroKid{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'css/games/emo_match.css' %}">
+  <script src="{% static 'js/games/emo_match.js' %}" defer></script>
+{% endblock %}
+
+{% block content %}
+<div class="emo-match-container">
+
+  <!-- Aviso inicial -->
+  <div class="alert alert-info text-center">
+    Por favor, juega con <strong>sinceridad</strong> y <strong>seriedad</strong> para mejores evaluaciones.
+  </div>
+
+  <!-- Botón Regresar -->
+  <div class="text-center mb-3">
+    <a href="{% url 'perfil' %}" class="btn btn-secondary">Regresar</a>
+  </div>
+
+  <!-- Título y tablero -->
+  <h2 class="text-center my-4">EmoMatch</h2>
+  <div id="board" class="grid-3x3"></div>
+
+  <!-- Estadísticas -->
+  <div id="stats" class="text-center mt-3">
+    <span>Intentos: <strong id="tries">0</strong></span>
+    — 
+    <span>Tiempo medio: <strong id="avgTime">0</strong> s</span>
+  </div>
+</div>
+
+<!-- Modal de fin de juego -->
+<div class="modal fade" id="endModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content text-center p-4">
+      <h3 class="modal-title mb-3">¡Terminaste! 🎉</h3>
+      <p class="mb-4">Felicitaciones por completar el juego.</p>
+      <div class="d-flex justify-content-center gap-2">
+        <button id="retryBtn" class="btn btn-primary">Repetir</button>
+        <a href="{% url 'perfil' %}" class="btn btn-secondary">Volver al inicio</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

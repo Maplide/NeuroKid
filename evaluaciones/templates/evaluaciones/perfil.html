@@ -1,63 +1,80 @@
+{# templates/evaluaciones/perfil.html #}
 {% extends 'evaluaciones/base.html' %}
 {% load static %}
 
-{% block title %}Perfil | NeuroKid{% endblock %}
-
-{% block head %}
-  <link rel="stylesheet" href="{% static 'css/pages/perfil.css' %}">
-{% endblock %}
+{% block title %}Mi Perfil | NeuroKid{% endblock %}
 
 {% block content %}
-<div class="container my-5">
+<div class="container mt-5">
   <h1 class="text-center mb-4">
-    {% if invitado %}
-      Bienvenido, Usuario Libre
-    {% else %}
-      Hola, {{ nombre }}
-    {% endif %}
+    ¡Bienvenido{% if invitado %}, Usuario Libre{% endif %}!
   </h1>
+
   <div class="row g-4">
-    <!-- Tarjeta de Juego 1 -->
-    <div class="col-6 col-md-3">
-      <div class="card text-center shadow-sm h-100">
+    <!-- EmoMatch (TEA) -->
+    <div class="col-sm-6 col-md-4 col-lg-3">
+      <div class="card h-100 text-center p-3">
+        <img src="{% static 'images/game_emo_match_thumb.png' %}"
+             class="card-img-top mx-auto mb-2"
+             style="width:80px; height:80px;"
+             alt="EmoMatch">
         <div class="card-body d-flex flex-column">
-          <i class="fas fa-memory fa-3x mb-3 text-primary"></i>
-          <h5 class="card-title">Memoria Visual</h5>
-          <p class="card-text flex-grow-1">Desarrolla la atención y retención.</p>
-          <a href="#" class="btn btn-primary mt-auto">Jugar</a>
+          <h5 class="card-title">EmoMatch</h5>
+          <p class="card-text text-muted">TEA</p>
+          <a href="{% url 'juego_emo_match' %}" class="btn btn-primary mt-auto">
+            Jugar
+          </a>
         </div>
       </div>
     </div>
-    <!-- Tarjeta de Juego 2 -->
-    <div class="col-6 col-md-3">
-      <div class="card text-center shadow-sm h-100">
+
+    <!-- Atención Turbo (TDHA) -->
+    <div class="col-sm-6 col-md-4 col-lg-3">
+      <div class="card h-100 text-center p-3">
+        <img src="{% static 'images/game_turbo_thumb.png' %}"
+             class="card-img-top mx-auto mb-2"
+             style="width:80px; height:80px;"
+             alt="Atención Turbo">
         <div class="card-body d-flex flex-column">
-          <i class="fas fa-brain fa-3x mb-3 text-primary"></i>
-          <h5 class="card-title">Reconocimiento de Patrones</h5>
-          <p class="card-text flex-grow-1">Evalúa el razonamiento lógico.</p>
-          <a href="#" class="btn btn-primary mt-auto">Jugar</a>
+          <h5 class="card-title">Atención Turbo</h5>
+          <p class="card-text text-muted">TDHA</p>
+          <a href="#" class="btn btn-secondary mt-auto">
+            Próximamente
+          </a>
         </div>
       </div>
     </div>
-    <!-- Tarjeta de Juego 3 -->
-    <div class="col-6 col-md-3">
-      <div class="card text-center shadow-sm h-100">
+
+    <!-- Mano Firme (Discapacidad motora) -->
+    <div class="col-sm-6 col-md-4 col-lg-3">
+      <div class="card h-100 text-center p-3">
+        <img src="{% static 'images/game_mano_firme_thumb.png' %}"
+             class="card-img-top mx-auto mb-2"
+             style="width:80px; height:80px;"
+             alt="Mano Firme">
         <div class="card-body d-flex flex-column">
-          <i class="fas fa-child fa-3x mb-3 text-primary"></i>
-          <h5 class="card-title">Juego TEA</h5>
-          <p class="card-text flex-grow-1">Detecta señales de espectro autista.</p>
-          <a href="#" class="btn btn-primary mt-auto">Jugar</a>
+          <h5 class="card-title">Mano Firme</h5>
+          <p class="card-text text-muted">Discapacidad motora</p>
+          <a href="#" class="btn btn-secondary mt-auto">
+            Próximamente
+          </a>
         </div>
       </div>
     </div>
-    <!-- Tarjeta de Juego 4 -->
-    <div class="col-6 col-md-3">
-      <div class="card text-center shadow-sm h-100">
+
+    <!-- Respira y Flota (Estrés) -->
+    <div class="col-sm-6 col-md-4 col-lg-3">
+      <div class="card h-100 text-center p-3">
+        <img src="{% static 'images/game_respira_flota_thumb.png' %}"
+             class="card-img-top mx-auto mb-2"
+             style="width:80px; height:80px;"
+             alt="Respira y Flota">
         <div class="card-body d-flex flex-column">
-          <i class="fas fa-child fa-3x mb-3 text-primary"></i>
-          <h5 class="card-title">Juego TDHA</h5>
-          <p class="card-text flex-grow-1">Mide niveles de atención e impulsividad.</p>
-          <a href="#" class="btn btn-primary mt-auto">Jugar</a>
+          <h5 class="card-title">Respira y Flota</h5>
+          <p class="card-text text-muted">Estrés</p>
+          <a href="#" class="btn btn-secondary mt-auto">
+            Próximamente
+          </a>
         </div>
       </div>
     </div>
