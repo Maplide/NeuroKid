@@ -12,4 +12,12 @@ urlpatterns = [
     path('juego_reconocimiento_emocional/', views.juego_reconocimiento_emocional, name='juego_reconocimiento_emocional'),
     path('juego_memoria/', views.juego_memoria, name='juego_memoria'),
     path('login/', views.login_view, name='login'),
+
+     # Perfil de invitado
+    path('perfil/libre/', views.perfil, name='perfil_libre'),
+
+    # Versión genérica de perfil (usuario autenticado)
+    path('perfil/', views.perfil, name='perfil'),
+    # Perfil de un niño concreto
+    path('perfil/<int:nino_id>/', views.perfil, name='perfil'),
 ]

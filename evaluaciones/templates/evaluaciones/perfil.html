@@ -1,43 +1,66 @@
-{% extends 'base.html' %}
+{% extends 'evaluaciones/base.html' %}
+{% load static %}
+
+{% block title %}Perfil | NeuroKid{% endblock %}
 
 {% block head %}
   <link rel="stylesheet" href="{% static 'css/pages/perfil.css' %}">
 {% endblock %}
 
 {% block content %}
-<div class="container mt-5 text-center">
-    <h2>Perfil de {{ nombre }}</h2>
-    
-    <h3>Juegos Disponibles:</h3>
-    <div class="row">
-        <div class="col-md-3">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Juego 1</h5>
-                </div>
-            </div>
+<div class="container my-5">
+  <h1 class="text-center mb-4">
+    {% if invitado %}
+      Bienvenido, Usuario Libre
+    {% else %}
+      Hola, {{ nombre }}
+    {% endif %}
+  </h1>
+  <div class="row g-4">
+    <!-- Tarjeta de Juego 1 -->
+    <div class="col-6 col-md-3">
+      <div class="card text-center shadow-sm h-100">
+        <div class="card-body d-flex flex-column">
+          <i class="fas fa-memory fa-3x mb-3 text-primary"></i>
+          <h5 class="card-title">Memoria Visual</h5>
+          <p class="card-text flex-grow-1">Desarrolla la atención y retención.</p>
+          <a href="#" class="btn btn-primary mt-auto">Jugar</a>
         </div>
-        <div class="col-md-3">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Juego 2</h5>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Juego 3</h5>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Juego 4</h5>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
+    <!-- Tarjeta de Juego 2 -->
+    <div class="col-6 col-md-3">
+      <div class="card text-center shadow-sm h-100">
+        <div class="card-body d-flex flex-column">
+          <i class="fas fa-brain fa-3x mb-3 text-primary"></i>
+          <h5 class="card-title">Reconocimiento de Patrones</h5>
+          <p class="card-text flex-grow-1">Evalúa el razonamiento lógico.</p>
+          <a href="#" class="btn btn-primary mt-auto">Jugar</a>
+        </div>
+      </div>
+    </div>
+    <!-- Tarjeta de Juego 3 -->
+    <div class="col-6 col-md-3">
+      <div class="card text-center shadow-sm h-100">
+        <div class="card-body d-flex flex-column">
+          <i class="fas fa-child fa-3x mb-3 text-primary"></i>
+          <h5 class="card-title">Juego TEA</h5>
+          <p class="card-text flex-grow-1">Detecta señales de espectro autista.</p>
+          <a href="#" class="btn btn-primary mt-auto">Jugar</a>
+        </div>
+      </div>
+    </div>
+    <!-- Tarjeta de Juego 4 -->
+    <div class="col-6 col-md-3">
+      <div class="card text-center shadow-sm h-100">
+        <div class="card-body d-flex flex-column">
+          <i class="fas fa-child fa-3x mb-3 text-primary"></i>
+          <h5 class="card-title">Juego TDHA</h5>
+          <p class="card-text flex-grow-1">Mide niveles de atención e impulsividad.</p>
+          <a href="#" class="btn btn-primary mt-auto">Jugar</a>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

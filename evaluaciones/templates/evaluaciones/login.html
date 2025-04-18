@@ -1,19 +1,38 @@
-{% extends 'base.html' %}
+{% extends 'evaluaciones/base.html' %}
+{% load static %}
+
+{% block title %}Iniciar Sesión | NeuroKid{% endblock %}
 
 {% block head %}
   <link rel="stylesheet" href="{% static 'css/pages/login.css' %}">
 {% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <h2>Iniciar Sesión</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Ingresar</button>
-    </form>
-    
-    <p>O inicia sesión con:</p>
-    <a href="#" class="btn btn-danger">Iniciar con Google</a>
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h2 class="text-center mb-4">Acceso Profesionales</h2>
+          <form method="post" novalidate>
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            <div class="mb-3">
+              <label for="{{ form.username.id_for_label }}" class="form-label">Usuario</label>
+              {{ form.username }}
+            </div>
+            <div class="mb-3">
+              <label for="{{ form.password.id_for_label }}" class="form-label">Contraseña</label>
+              {{ form.password }}
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Iniciar Sesión</button>
+          </form>
+          <p class="text-center mt-3">
+            ¿No tienes cuenta? <a href="{% url 'registro' %}">Regístrate aquí</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

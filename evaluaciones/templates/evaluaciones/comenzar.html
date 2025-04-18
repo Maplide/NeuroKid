@@ -1,15 +1,19 @@
-{% extends 'base.html' %}
+{% extends 'evaluaciones/base.html' %}
+{% load static %}
+
+{% block title %}Comenzar | NeuroKid{% endblock %}
 
 {% block head %}
   <link rel="stylesheet" href="{% static 'css/pages/comenzar.css' %}">
 {% endblock %}
 
 {% block content %}
-<div class="container text-center mt-5">
-    <h2>Bienvenido</h2>
-    <p>Elige cómo quieres empezar:</p>
-    
-    <a href="{% url 'login' %}" class="btn btn-success">Iniciar Sesión</a>
-    <a href="{% url 'perfil_libre' %}" class="btn btn-secondary">Entrar como Libre</a>
-</div>
+  <div class="comenzar-hero text-center py-5">
+    <h1>¿Cómo quieres jugar?</h1>
+    <p class="lead mb-4">Elige si inicias sesión o entras como invitado</p>
+    <div class="d-flex justify-content-center gap-4">
+      <a href="{% url 'perfil_libre' %}" class="btn btn-secondary">Entrar como invitado</a>
+      <a href="{% url 'login' %}"          class="btn btn-primary">Iniciar sesión</a>
+    </div>
+  </div>
 {% endblock %}

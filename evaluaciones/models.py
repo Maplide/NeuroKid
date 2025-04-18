@@ -11,11 +11,11 @@ class Perfil(models.Model):
         ('especialista', 'Especialista'),
         ('invitado', 'Invitado'),
     ])
-    fecha_nacimiento = models.DateField(null=True, blank=True)  # Niños
-    especialidad = models.CharField(max_length=100, null=True, blank=True)  # Especialistas
+    fecha_nacimiento = models.DateField(null=True, blank=True)      # Para niños
+    especialidad = models.CharField(max_length=100, null=True, blank=True)  # Para especialistas
 
     def __str__(self):
-        return f"{self.user.username} - {self.rol}"
+        return f"{self.user.username} ({self.get_rol_display()})"
 
 # ---------------------------
 # NIÑO
@@ -35,12 +35,12 @@ class Nino(models.Model):
 class Especialista(models.Model):
     perfil = models.OneToOneField(Perfil, on_delete=models.CASCADE)
     dni = models.CharField(max_length=15)
-    rne = models.CharField(max_length=30)  # Registro Nacional de Especialistas
+    rne = models.CharField(max_length=30)      # Registro Nacional de Especialistas
     telefono = models.CharField(max_length=20)
     institucion = models.CharField(max_length=100)
 
     def __str__(self):
-        return f'{self.perfil.user.get_full_name()}'
+        return f"{self.perfil.user.get_full_name()} – {self.perfil.especialidad}"
 
 # ---------------------------
 # JUEGOS
@@ -57,7 +57,7 @@ class Juego(models.Model):
     activo = models.BooleanField(default=True)
 
     def __str__(self):
-        return f"{self.nombre} ({self.tipo})"
+        return f"{self.nombre} ({self.get_tipo_display()})"
 
 # ---------------------------
 # INTENTOS DE JUEGO
@@ -69,7 +69,7 @@ class IntentoJuego(models.Model):
     fecha = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.nino.nombre} - {self.juego.nombre} - {self.resultado}"
+        return f"{self.nino.nombre} – {self.juego.nombre} – {self.resultado}"
 
 # ---------------------------
 # RESULTADOS
@@ -82,7 +82,7 @@ class Resultado(models.Model):
     fecha = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Resultado de {self.nino.nombre} en {self.juego.nombre}"
+        return f"Resultado {self.nino.nombre} en {self.juego.nombre}"
 
 # ---------------------------
 # EVALUACIÓN
@@ -95,4 +95,4 @@ class Evaluacion(models.Model):
     observaciones = models.TextField(null=True, blank=True)
 
     def __str__(self):
-        return f'Evaluación de {self.nino.nombre} en {self.fecha}'
+        return f"Evaluación de {self.nino.nombre} – {self.fecha:%Y-%m-%d %H:%M}"
