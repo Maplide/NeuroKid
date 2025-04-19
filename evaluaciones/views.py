@@ -106,3 +106,12 @@ def api_registrar_intento(request):
         )
         return JsonResponse({"status": "ok"})
     return JsonResponse({"error": "no autorizado"}, status=403)
+
+def juego_turbo(request):
+    return render(request, 'evaluaciones/games/game_turbo.html')
+
+def juego_mano_firme(request):
+    return render(request, 'evaluaciones/games/game_mano_firme.html')
+
+def juego_respira_flota(request):
+    return render(request, 'evaluaciones/games/game_respira_flota.html')

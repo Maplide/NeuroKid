@@ -25,4 +25,10 @@ urlpatterns = [
     path('games/emo_match/', views.juego_emo_match, name='juego_emo_match'),
 
     path('api/registro_intento/', views.api_registrar_intento, name='api_registro_intento'),
+
+    path('games/turbo/', views.juego_turbo, name='juego_turbo'),
+
+    path('games/mano-firme/', views.juego_mano_firme, name='juego_mano_firme'),
+
+    path('games/respira_flota/', views.juego_respira_flota, name='juego_respira_flota'),
 ]

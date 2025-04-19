@@ -1,0 +1,52 @@
+{% extends 'evaluaciones/base.html' %}
+{% load static %}
+
+{% block title %}Mano Firme | NeuroKid{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'css/games/mano_firme.css' %}">
+  <script src="{% static 'js/games/mano_firme.js' %}" defer></script>
+{% endblock %}
+
+{% block content %}
+<div class="mano-firme-container">
+  <h2 class="text-center my-4">Mano Firme</h2>
+
+  <!-- Aviso inicial -->
+  <div class="alert alert-info text-center">
+    Por favor, mantén el cursor dentro del círculo lo más estable posible.
+  </div>
+
+  <!-- Botón Iniciar -->
+  <div id="controls" class="text-center mb-3">
+    <button id="startBtn" class="btn btn-primary">Iniciar Juego</button>
+  </div>
+
+  <!-- Área de juego -->
+  <div id="gameArea" class="game-area"></div>
+
+  <!-- Estadísticas -->
+  <div id="stats" class="text-center mt-3" style="display:none;">
+    <span>Aciertos: <strong id="hits">0</strong></span> —
+    <span>Fallos:   <strong id="misses">0</strong></span> —
+    <span>Reacción media: <strong id="avgTime">0.00</strong> s</span>
+  </div>
+</div>
+
+<!-- Modal fin de juego -->
+<div class="modal fade" id="endModalFirme" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content text-center p-4">
+      <h3 class="modal-title mb-3">¡Buen trabajo! 🤝</h3>
+      <p class="mb-4">
+        Aciertos: <strong id="finalHitsFirme"></strong>,
+        Fallos:   <strong id="finalMissesFirme"></strong>
+      </p>
+      <div class="d-flex justify-content-center gap-2">
+        <button id="retryFirme" class="btn btn-primary">Repetir</button>
+        <a href="{% url 'perfil' %}" class="btn btn-secondary">Volver al perfil</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

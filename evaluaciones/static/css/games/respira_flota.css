@@ -1,0 +1,23 @@
+/* css/games/respira_flota.css */
+.respira-flota-container {
+    max-width: 360px;
+    margin: 0 auto;
+  }
+  .bubble {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto;
+    background: var(--accent-color);
+    border-radius: 50%;
+    transition: width 0.3s, height 0.3s;
+    cursor: pointer;
+  }
+  .bubble.inhale {
+    width: 200px;
+    height: 200px;
+    background: var(--primary-color);
+  }
+  #stats {
+    font-size: 1rem;
+  }
+  
