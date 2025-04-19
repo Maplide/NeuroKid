@@ -1,14 +1,28 @@
 .card {
-    background: var(--bg-white);
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-    transition: transform .3s ease;
-  }
-  .card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-  }
-  .card-header { background: var(--primary-color); color: var(--text-white); padding: 15px 20px; }
-  .card-body   { padding: 20px; }
-  .card-footer { background: var(--bg-light); padding: 15px 20px; border-top: 1px solid var(--border-color); }
+  background: var(--bg-white);
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+  transition: transform .3s ease;
+}
+
+.card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+  
+.card-header {
+  background: var(--primary-color);
+  color: var(--text-white);
+  padding: 15px 20px;
+}
+  
+.card-body {
+  padding: 20px;
+}
+  
+.card-footer {
+  background: var(--bg-light);
+  padding: 15px 20px;
+  border-top: 1px solid var(--border-color);
+}
   

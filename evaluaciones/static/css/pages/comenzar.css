@@ -1,9 +1,18 @@
 /* Centro de bienvenida */
 .comenzar-container {
-    text-align: center;
-    margin: 100px 0;
-  }
-  .comenzar-container h2 { margin-bottom: 20px; }
-  .comenzar-container p  { margin-bottom: 30px; }
-  .comenzar-container .btn { margin: 0 10px; }
+  text-align: center;
+  margin: 100px 0;
+}
+
+.comenzar-container h2 {
+  margin-bottom: 20px;
+}
+
+.comenzar-container p  {
+  margin-bottom: 30px;
+}
+
+.comenzar-container .btn {
+  margin: 0 10px;
+}
   

@@ -1,48 +1,60 @@
 .btn {
-    display: inline-block;
-    padding: 12px 30px;
-    border-radius: 50px;
-    font-weight: 600;
-    text-align: center;
-    transition: all .3s ease;
-    cursor: pointer;
-    border: none;
-  }
-  .btn-primary {
-    background: var(--primary-color);
-    color: var(--text-white);
-  }
-  .btn-primary:hover {
-    background: var(--primary-dark);
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-  }
-  .btn-outline-primary {
-    background: transparent;
-    color: var(--primary-color);
-    border: 2px solid var(--primary-color);
-  }
-  .btn-outline-primary:hover {
-    background: var(--primary-color);
-    color: var(--text-white);
-  }
-  .btn-cta {
-    background: var(--accent-color);
-    color: var(--primary-dark);
-  }
-  .btn-cta:hover {
-    background: var(--text-white);
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-  }
-  .btn-lg { padding: 15px 40px; font-size: 1.1rem; }
-  .btn-login {
-    background: transparent;
-    color: var(--primary-color);
-    border: 2px solid var(--primary-color);
-  }
-  .btn-login:hover {
-    background: var(--primary-color);
-    color: var(--text-white);
-  }
+  display: inline-block;
+  padding: 12px 30px;
+  border-radius: 50px;
+  font-weight: 600;
+  text-align: center;
+  transition: all .3s ease;
+  cursor: pointer;
+  border: none;
+}
+
+.btn-primary {
+  background: var(--primary-color);
+  color: var(--text-white);
+}
+  
+.btn-primary:hover {
+  background: var(--primary-dark);
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+  
+.btn-outline-primary {
+  background: transparent;
+  color: var(--primary-color);
+  border: 2px solid var(--primary-color);
+}
+  
+.btn-outline-primary:hover {
+  background: var(--primary-color);
+  color: var(--text-white);
+}
+
+.btn-cta {
+  background: var(--accent-color);
+  color: var(--primary-dark);
+}
+  
+.btn-cta:hover {
+  background: var(--text-white);
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.btn-lg {
+  padding: 15px 40px;
+  font-size: 1.1rem;
+}
+
+.btn-login {
+  background: transparent;
+  color: var(--primary-color);
+  border: 2px solid var(--primary-color);
+}
+  
+.btn-login:hover {
+  background: var(--primary-color);
+  color: var(--text-white);
+}
   

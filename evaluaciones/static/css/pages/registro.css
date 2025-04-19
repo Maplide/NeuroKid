@@ -1,7 +1,10 @@
 /* Formulario de registro */
 .registro-form {
-    max-width: 500px;
-    margin: 50px auto;
-  }
-  .registro-form .form-group { margin-bottom: 20px; }
+  max-width: 500px;
+  margin: 50px auto;
+}
+  
+.registro-form .form-group {
+  margin-bottom: 20px;
+}
   

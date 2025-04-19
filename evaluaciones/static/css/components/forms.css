@@ -1,5 +1,14 @@
-.form-group { margin-bottom: 25px; position: relative; }
-.form-group label { display: block; margin-bottom: 8px; font-weight: 600; }
+.form-group {
+  margin-bottom: 25px;
+  position: relative;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
 .form-control {
   width: 100%;
   padding: 12px 15px;
@@ -7,15 +16,24 @@
   border-radius: 5px;
   transition: all .3s ease;
 }
+
 .form-control:focus {
   border-color: var(--primary-color);
   box-shadow: 0 0 0 3px rgba(106,27,154,0.2);
   outline: none;
 }
-.form-control.with-icon { padding-left: 40px; }
+
+.form-control.with-icon {
+  padding-left: 40px;
+}
+
 .form-icon {
   position: absolute;
   left: 15px; top: 40px;
   color: var(--text-light);
 }
-textarea.form-control { min-height: 120px; resize: vertical; }
+
+textarea.form-control {
+  min-height: 120px;
+  resize: vertical;
+}
