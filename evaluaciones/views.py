@@ -38,18 +38,45 @@ def logout_view(request):
     auth_logout(request)
     return redirect('index')
 
+def perfil_libre(request):
+    """
+    Vista exclusiva para usuarios invitados:
+    muestra el perfil con invitado=True sin pedir login.
+    """
+    return render(request, 'evaluaciones/perfil.html', {
+        'nombre': 'Usuario Libre',
+        'invitado': True
+    })
+
 @login_required
 def perfil(request, nino_id=None):
+    """
+    Perfil de niño o especialista, requiere login.
+    """
+    # Si pasamos un nino_id explícito
     if nino_id:
         nino = get_object_or_404(Nino, id=nino_id)
-        return render(request, 'evaluaciones/perfil.html', {'nino': nino, 'invitado': False})
+        return render(request, 'evaluaciones/perfil.html', {
+            'nino': nino,
+            'invitado': False
+        })
+
+    # Usuario autenticado, buscamos su perfil
     perfil = Perfil.objects.filter(user=request.user).first()
     if perfil and perfil.rol == 'nino':
+        # Asumimos que email de User = email en Nino
         nino = Nino.objects.filter(email=request.user.email).first()
-        return render(request, 'evaluaciones/perfil.html', {'nino': nino, 'invitado': False})
-    # especialista o invitado autenticado
-    nombre = request.user.get_full_name() or request.user.username
-    return render(request, 'evaluaciones/perfil.html', {'nombre': nombre, 'invitado': False})
+        return render(request, 'evaluaciones/perfil.html', {
+            'nino': nino,
+            'invitado': False
+        })
+    else:
+        # Especialista u otro
+        nombre = request.user.get_full_name() or request.user.username
+        return render(request, 'evaluaciones/perfil.html', {
+            'nombre': nombre,
+            'invitado': False
+        })
 
 def nosotros(request):
     return render(request, 'evaluaciones/nosotros.html')
@@ -64,16 +91,24 @@ def comenzar(request):
     return render(request, 'evaluaciones/comenzar.html')
 
 def juego_emo_match(request):
-    return render(request, 'evaluaciones/games/game_emo_match.html')
+    return render(request, 'evaluaciones/games/game_emo_match.html', {
+        'invitado': not request.user.is_authenticated
+    })
 
 def juego_turbo(request):
-    return render(request, 'evaluaciones/games/game_turbo.html')
+    return render(request, 'evaluaciones/games/game_turbo.html', {
+        'invitado': not request.user.is_authenticated
+    })
 
 def juego_mano_firme(request):
-    return render(request, 'evaluaciones/games/game_mano_firme.html')
+    return render(request, 'evaluaciones/games/game_mano_firme.html', {
+        'invitado': not request.user.is_authenticated
+    })
 
 def juego_respira_flota(request):
-    return render(request, 'evaluaciones/games/game_respira_flota.html')
+    return render(request, 'evaluaciones/games/game_respira_flota.html', {
+        'invitado': not request.user.is_authenticated
+    })
 
 @csrf_exempt
 def api_registrar_intento(request):

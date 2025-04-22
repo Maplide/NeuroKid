@@ -18,7 +18,11 @@
 
   <!-- Botón Regresar -->
   <div class="text-center mb-3">
-    <a href="{% url 'perfil' %}" class="btn btn-secondary">Regresar</a>
+    {% if invitado %}
+      <a href="{% url 'perfil_libre' %}" class="btn btn-secondary">Regresar</a>
+    {% else %}
+      <a href="{% url 'perfil' %}" class="btn btn-secondary">Regresar</a>
+    {% endif %}
   </div>
 
   <!-- Título y tablero -->

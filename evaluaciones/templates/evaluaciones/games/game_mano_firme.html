@@ -17,6 +17,15 @@
     Por favor, mantén el cursor dentro del círculo lo más estable posible.
   </div>
 
+  <!-- Botón Regresar -->
+  <div class="text-center mb-3">
+    {% if invitado %}
+      <a href="{% url 'perfil_libre' %}" class="btn btn-secondary">Regresar</a>
+    {% else %}
+      <a href="{% url 'perfil' %}" class="btn btn-secondary">Regresar</a>
+    {% endif %}
+  </div>
+
   <!-- Botón Iniciar -->
   <div id="controls" class="text-center mb-3">
     <button id="startBtn" class="btn btn-primary">Iniciar Juego</button>
