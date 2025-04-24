@@ -12,15 +12,6 @@
 <div class="turbo-container">
   <h2 class="text-center my-4">Atención Turbo</h2>
 
-  <!-- Botón Regresar -->
-  <div class="text-center mb-3">
-    {% if invitado %}
-      <a href="{% url 'perfil_libre' %}" class="btn btn-secondary">Regresar</a>
-    {% else %}
-      <a href="{% url 'perfil' %}" class="btn btn-secondary">Regresar</a>
-    {% endif %}
-  </div>
-
   <!-- controles -->
   <div id="controls" class="text-center mb-3">
     <button id="startBtn" class="btn btn-primary">Iniciar Juego</button>
@@ -33,7 +24,16 @@
   <div id="stats" class="text-center mt-3" style="display:none;">
     <span>Aciertos: <strong id="hits">0</strong></span> —
     <span>Fallos:   <strong id="misses">0</strong></span> —
-    <span>Tiempo medio: <strong id="avgTime">0.00</strong> s</span>
+    <span>Tiempo medio: <strong id="avgTime">0.00</strong> s</span>
+  </div>
+
+  <!-- Botón Regresar -->
+  <div class="text-center mb-3">
+    {% if invitado %}
+      <a href="{% url 'perfil_libre' %}" class="btn btn-secondary">Regresar</a>
+    {% else %}
+      <a href="{% url 'perfil' %}" class="btn btn-secondary">Regresar</a>
+    {% endif %}
   </div>
 </div>
 

@@ -61,34 +61,71 @@
         <!-- Games Preview -->
         <section class="games-section py-5 my-4">
             <div class="container">
-                <h2 class="section-title text-center mb-3">Nuestros Juegos de Evaluación</h2>
-                <p class="section-description text-center mb-5">Diseñados específicamente para diferentes rangos de edad y áreas de desarrollo</p>
-                
-                <div class="row g-4">
-                    <div class="col-md-6">
-                        <div class="game-card h-100 shadow-sm rounded overflow-hidden">
-                            <img src="{% static 'images/juego1.jpg' %}" alt="Juego de memoria" class="img-fluid w-100" style="height: 200px; object-fit: cover;">
-                            <div class="game-info p-4">
-                                <h3 class="h4">Memoria Visual</h3>
-                                <p class="mb-1"><strong>Edad:</strong> 4-7 años</p>
-                                <p class="mb-0">Evalúa capacidad de atención y memoria a corto plazo</p>
-                            </div>
-                        </div>
+            <h2 class="section-title text-center mb-3">Nuestros Juegos de Evaluación</h2>
+            <p class="section-description text-center mb-5">
+                Diseñados específicamente para diferentes ámbitos de desarrollo infantil
+            </p>
+        
+            <div class="row g-4">
+                <!-- EmoMatch -->
+                <div class="col-sm-6 col-md-3">
+                <a href="{% url 'juego_emo_match' %}" class="game-card h-100 shadow-sm rounded overflow-hidden text-decoration-none">
+                    <img src="{% static 'images/game_emo_match.jpg' %}"
+                        alt="EmoMatch"
+                        class="img-fluid w-100"
+                        style="height:200px; object-fit:cover;">
+                    <div class="game-info p-4 text-center">
+                    <h3 class="h5 mb-2">EmoMatch</h3>
+                    <p class="mb-0 text-muted">TEA</p>
                     </div>
-                    <div class="col-md-6">
-                        <div class="game-card h-100 shadow-sm rounded overflow-hidden">
-                            <img src="{% static 'images/juego2.jpg' %}" alt="Juego de patrones" class="img-fluid w-100" style="height: 200px; object-fit: cover;">
-                            <div class="game-info p-4">
-                                <h3 class="h4">Reconocimiento de Patrones</h3>
-                                <p class="mb-1"><strong>Edad:</strong> 6-11 años</p>
-                                <p class="mb-0">Analiza habilidades de razonamiento lógico</p>
-                            </div>
-                        </div>
+                </a>
+                </div>
+
+                <!-- Atención Turbo -->
+                <div class="col-sm-6 col-md-3">
+                <a href="{% url 'juego_turbo' %}" class="game-card h-100 shadow-sm rounded overflow-hidden text-decoration-none">
+                    <img src="{% static 'images/game_turbo.jpg' %}"
+                        alt="Atención Turbo"
+                        class="img-fluid w-100"
+                        style="height:200px; object-fit:cover;">
+                    <div class="game-info p-4 text-center">
+                    <h3 class="h5 mb-2">Atención Turbo</h3>
+                    <p class="mb-0 text-muted">TDHA</p>
                     </div>
-                    <!-- Puedes añadir más juegos -->
+                </a>
+                </div>
+        
+                <!-- Mano Firme -->
+                <div class="col-sm-6 col-md-3">
+                <a href="{% url 'juego_mano_firme' %}" class="game-card h-100 shadow-sm rounded overflow-hidden text-decoration-none">
+                    <img src="{% static 'images/game_mano_firme.jpg' %}"
+                        alt="Mano Firme"
+                        class="img-fluid w-100"
+                        style="height:200px; object-fit:cover;">
+                    <div class="game-info p-4 text-center">
+                    <h3 class="h5 mb-2">Mano Firme</h3>
+                    <p class="mb-0 text-muted">Discapacidad motora</p>
+                    </div>
+                </a>
+                </div>
+        
+                <!-- Respira y Flota -->
+                <div class="col-sm-6 col-md-3">
+                <a href="{% url 'juego_respira_flota' %}" class="game-card h-100 shadow-sm rounded overflow-hidden text-decoration-none">
+                    <img src="{% static 'images/game_respira_flota.jpg' %}"
+                        alt="Respira y Flota"
+                        class="img-fluid w-100"
+                        style="height:200px; object-fit:cover;">
+                    <div class="game-info p-4 text-center">
+                    <h3 class="h5 mb-2">Respira y Flota</h3>
+                    <p class="mb-0 text-muted">Estrés</p>
+                    </div>
+                </a>
                 </div>
             </div>
+            </div>
         </section>
+  
 
         <!-- Call to Action -->
         <section class="cta-section py-5 my-4 text-white rounded-3">

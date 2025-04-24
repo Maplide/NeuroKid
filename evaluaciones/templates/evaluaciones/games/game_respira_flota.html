@@ -16,15 +16,6 @@
     Mantén pulsado el círculo para <strong>inhalar</strong>, suelta para <strong>exhalar</strong>. Completa 3 ciclos.
   </div>
 
-  <!-- Botón Regresar -->
-  <div class="text-center mb-3">
-    {% if invitado %}
-      <a href="{% url 'perfil_libre' %}" class="btn btn-secondary">Regresar</a>
-    {% else %}
-      <a href="{% url 'perfil' %}" class="btn btn-secondary">Regresar</a>
-    {% endif %}
-  </div>
-
   <!-- Título y burbuja -->
   <h2 class="text-center my-4">Respira y Flota</h2>
   <div id="bubble" class="bubble"></div>
@@ -33,6 +24,15 @@
   <div id="stats" class="text-center mt-3">
     <span>Ciclos completados: <strong id="cycles">0</strong> / 3</span> — 
     <span>Tiempo medio de inhalación: <strong id="avgHold">0.00</strong> s</span>
+  </div>
+
+  <!-- Botón Regresar -->
+  <div class="text-center mb-3">
+    {% if invitado %}
+      <a href="{% url 'perfil_libre' %}" class="btn btn-secondary">Regresar</a>
+    {% else %}
+      <a href="{% url 'perfil' %}" class="btn btn-secondary">Regresar</a>
+    {% endif %}
   </div>
 </div>
 

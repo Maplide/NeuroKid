@@ -16,15 +16,6 @@
     Por favor, juega con <strong>sinceridad</strong> y <strong>seriedad</strong> para mejores evaluaciones.
   </div>
 
-  <!-- Botón Regresar -->
-  <div class="text-center mb-3">
-    {% if invitado %}
-      <a href="{% url 'perfil_libre' %}" class="btn btn-secondary">Regresar</a>
-    {% else %}
-      <a href="{% url 'perfil' %}" class="btn btn-secondary">Regresar</a>
-    {% endif %}
-  </div>
-
   <!-- Título y tablero -->
   <h2 class="text-center my-4">EmoMatch</h2>
   <div id="board" class="grid-3x3"></div>
@@ -34,6 +25,15 @@
     <span>Intentos: <strong id="tries">0</strong></span>
     — 
     <span>Tiempo medio: <strong id="avgTime">0</strong> s</span>
+  </div>
+
+  <!-- Botón Regresar -->
+  <div class="text-center mb-3">
+    {% if invitado %}
+      <a href="{% url 'perfil_libre' %}" class="btn btn-secondary">Regresar</a>
+    {% else %}
+      <a href="{% url 'perfil' %}" class="btn btn-secondary">Regresar</a>
+    {% endif %}
   </div>
 </div>
 

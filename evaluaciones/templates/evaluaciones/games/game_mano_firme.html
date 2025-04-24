@@ -10,21 +10,13 @@
 
 {% block content %}
 <div class="mano-firme-container">
-  <h2 class="text-center my-4">Mano Firme</h2>
-
+  
   <!-- Aviso inicial -->
   <div class="alert alert-info text-center">
     Por favor, mantén el cursor dentro del círculo lo más estable posible.
   </div>
 
-  <!-- Botón Regresar -->
-  <div class="text-center mb-3">
-    {% if invitado %}
-      <a href="{% url 'perfil_libre' %}" class="btn btn-secondary">Regresar</a>
-    {% else %}
-      <a href="{% url 'perfil' %}" class="btn btn-secondary">Regresar</a>
-    {% endif %}
-  </div>
+  <h2 class="text-center my-4">Mano Firme</h2>
 
   <!-- Botón Iniciar -->
   <div id="controls" class="text-center mb-3">
@@ -40,6 +32,16 @@
     <span>Fallos:   <strong id="misses">0</strong></span> —
     <span>Reacción media: <strong id="avgTime">0.00</strong> s</span>
   </div>
+
+  <!-- Botón Regresar -->
+  <div class="text-center mb-3">
+    {% if invitado %}
+      <a href="{% url 'perfil_libre' %}" class="btn btn-secondary">Regresar</a>
+    {% else %}
+      <a href="{% url 'perfil' %}" class="btn btn-secondary">Regresar</a>
+    {% endif %}
+  </div>
+
 </div>
 
 <!-- Modal fin de juego -->
