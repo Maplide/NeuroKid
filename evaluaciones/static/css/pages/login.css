@@ -1,13 +1,49 @@
-/* Caja de login */
-.login-container {
-  max-width: 400px;
-  margin: 60px auto;
+/* Estilo visual limpio para login */
+.login-wrapper {
+  display: flex;
+  justify-content: center;
+  padding-top: 2rem;
+  padding-bottom: 4rem;
+  background-color: transparent;
 }
-  
-.login-container form {
-  background: var(--bg-white);
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+
+.login-card {
+  width: 100%;
+  max-width: 500px;
+  background: #fff;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.05);
 }
-  
+
+h2 {
+  color: #2c3e50;
+}
+
+label.form-label {
+  font-weight: 500;
+}
+
+input.form-control {
+  border-radius: .5rem;
+  padding: .6rem .75rem;
+}
+
+input.form-control:focus {
+  border-color: #007bff;
+  box-shadow: none;
+}
+
+button[type="submit"] {
+  padding: .75rem;
+  border-radius: .5rem;
+  font-weight: 600;
+  background: #007bff;
+  border: none;
+  color: white;
+  transition: background .3s;
+}
+
+button[type="submit"]:hover {
+  background: #0056b3;
+}

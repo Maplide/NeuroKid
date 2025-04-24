@@ -33,3 +33,13 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Exportar funciones si es necesario
   export { toggleMobileMenu };
+
+  document.addEventListener('click', function (event) {
+    const isDropdown = event.target.closest('.dropdown');
+    if (!isDropdown) {
+      const dropdown = document.querySelector('.dropdown-menu.show');
+      if (dropdown) {
+        bootstrap.Dropdown.getInstance(document.querySelector('[data-bs-toggle="dropdown"]')).hide();
+      }
+    }
+  });

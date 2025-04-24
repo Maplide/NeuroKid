@@ -1,10 +1,49 @@
-/* Formulario de registro */
-.registro-form {
+/* Estilo exclusivo para la zona del formulario */
+.registro-wrapper {
+  display: flex;
+  justify-content: center;
+  padding-top: 2rem;
+  padding-bottom: 4rem;
+  background-color: transparent; /* no afecta al layout global */
+}
+
+.registro-card {
+  width: 100%;
   max-width: 500px;
-  margin: 50px auto;
+  background: #fff;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.05);
 }
-  
-.registro-form .form-group {
-  margin-bottom: 20px;
+
+h2 {
+  color: #2c3e50;
 }
-  
+
+label.form-label {
+  font-weight: 500;
+}
+
+input.form-control {
+  border-radius: .5rem;
+  padding: .6rem .75rem;
+}
+
+input.form-control:focus {
+  border-color: #007bff;
+  box-shadow: none;
+}
+
+button[type="submit"] {
+  padding: .75rem;
+  border-radius: .5rem;
+  font-weight: 600;
+  background: #007bff;
+  border: none;
+  color: white;
+  transition: background .3s;
+}
+
+button[type="submit"]:hover {
+  background: #0056b3;
+}

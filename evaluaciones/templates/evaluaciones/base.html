@@ -34,16 +34,49 @@
     <div class="container">
       <div class="header-content">
         <div class="logo-container">
-          <img src="{% static 'images/LogoNK.png' %}" alt="NeuroKid Logo" class="logo-img header-logo">          <div class="logo-text">
-            <h1 class="logo-title header-title">NeuroKid</h1>
-            <p class="logo-subtitle header-subtitle">Psicología Infantil Digital</p>
-          </div>
-        </div>
-        <div class="header-cta">
-          <a href="{% url 'login' %}" class="btn btn-cta">
-            <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+          <a href="{% url 'index' %}" class="d-flex align-items-center text-decoration-none">
+            <img src="{% static 'images/LogoNK.png' %}" alt="NeuroKid Logo" class="logo-img header-logo">
+            <div class="logo-text ms-2">
+              <h1 class="logo-title header-title mb-0">NeuroKid</h1>
+              <p class="logo-subtitle header-subtitle">Psicología Infantil Digital</p>
+            </div>
           </a>
         </div>
+
+        <div class="header-cta">
+          {% if user.is_authenticated %}
+            <div class="dropdown">
+              <button class="btn btn-transparent text-white dropdown-toggle d-flex align-items-center gap-2" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-user-circle fa-2x"></i>
+                <div class="text-start">
+                  <div class="fw-semibold">{{ user.username }}</div>
+                  <small class="text-light">
+                    {% with user.perfil.rol as rol %}
+                      {% if rol == "nino" %}Niño
+                      {% elif rol == "especialista" %}Especialista
+                      {% else %}Invitado
+                      {% endif %}
+                    {% endwith %}
+                  </small>
+                </div>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userDropdown">
+                <li><a class="dropdown-item" href="{% url 'perfil' %}">
+                  <i class="fas fa-user me-2"></i> Ir a mi perfil
+                </a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-danger" href="{% url 'logout' %}">
+                  <i class="fas fa-sign-out-alt me-2"></i> Cerrar sesión
+                </a></li>
+              </ul>
+            </div>
+          {% else %}
+            <a href="{% url 'login' %}" class="btn btn-cta">
+              <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+            </a>
+          {% endif %}
+        </div>
+        
       </div>
     </div>
   </header>

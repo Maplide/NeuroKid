@@ -1,27 +1,61 @@
 # evaluaciones/views.py
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
 from django.contrib.auth import login as auth_login, logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from .models import Perfil, Nino, Especialista, Juego, IntentoJuego, Resultado, Evaluacion
+from django.contrib.auth.hashers import make_password
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.models import User
 from django.http import JsonResponse
+
+from .models import Perfil, Nino, Especialista, Juego, IntentoJuego, Resultado, Evaluacion
+
 import json
 
 def index(request):
     return render(request, 'evaluaciones/index.html')
 
+# ----------------------------------------------------------------
+# Código secreto para validar a los Especialistas
+ESPECIALISTA_CODE = "ESPECIALISTA/NK2025"
+# ----------------------------------------------------------------
+
 def registro(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            Perfil.objects.create(user=user, rol='invitado')
-            auth_login(request, user)
-            return redirect('perfil')
-    else:
-        form = UserCreationForm()
-    return render(request, 'evaluaciones/registro.html', {'form': form})
+        username = request.POST.get('username')
+        pass1 = request.POST.get('password1')
+        pass2 = request.POST.get('password2')
+        rol = request.POST.get('rol')
+        code = request.POST.get('specialist_code')
+
+        errores = []
+
+        if not username or not pass1 or not pass2:
+            errores.append("Todos los campos son obligatorios.")
+        elif pass1 != pass2:
+            errores.append("Las contraseñas no coinciden.")
+        elif User.objects.filter(username=username).exists():
+            errores.append("Ese usuario ya existe.")
+        elif rol == "especialista" and code != ESPECIALISTA_CODE:
+            errores.append("Código de especialista inválido.")
+
+        if errores:
+            return render(request, 'evaluaciones/registro.html', {
+                'errores': errores,
+                'formdata': request.POST
+            })
+
+        # Si todo bien, creamos el usuario
+        user = User.objects.create(
+            username=username,
+            password=make_password(pass1)
+        )
+        Perfil.objects.create(user=user, rol=rol)
+        auth_login(request, user)
+        return redirect('perfil')
+    
+    return render(request, 'evaluaciones/registro.html')
 
 def login_view(request):
     if request.method == 'POST':
