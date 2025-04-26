@@ -18,8 +18,12 @@ class PerfilAdmin(admin.ModelAdmin):
 
 @admin.register(Nino)
 class NinoAdmin(admin.ModelAdmin):
-    list_display = ('nombre', 'fecha_nacimiento', 'genero', 'email')
-    search_fields = ('nombre', 'email')
+    list_display = ('get_username', 'fecha_nacimiento', 'genero', 'email')
+    search_fields = ('user__username', 'email')
+
+    def get_username(self, obj):
+        return obj.user.username
+    get_username.short_description = 'Nombre de Usuario'
 
 @admin.register(Especialista)
 class EspecialistaAdmin(admin.ModelAdmin):

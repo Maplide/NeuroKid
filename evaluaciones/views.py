@@ -95,22 +95,33 @@ def perfil(request, nino_id=None):
             'invitado': False
         })
 
-    # Usuario autenticado, buscamos su perfil
     perfil = Perfil.objects.filter(user=request.user).first()
+
     if perfil and perfil.rol == 'nino':
         # Asumimos que email de User = email en Nino
-        nino = Nino.objects.filter(email=request.user.email).first()
+        nino = Nino.objects.filter(user=request.user).first()
+        # HISTORIAL DE INTENTOS POR JUEGO
+        intentos_por_juego = {}
+        if nino:
+            intentos = IntentoJuego.objects.filter(nino=nino).select_related('juego').order_by('-fecha')
+            for intento in intentos:
+                nombre_juego = intento.juego.nombre
+                if nombre_juego not in intentos_por_juego:
+                    intentos_por_juego[nombre_juego] = []
+                intentos_por_juego[nombre_juego].append(intento)
+
         return render(request, 'evaluaciones/perfil.html', {
             'nino': nino,
-            'invitado': False
+            'invitado': False,
+            'intentos': intentos_por_juego
         })
-    else:
-        # Especialista u otro
-        nombre = request.user.get_full_name() or request.user.username
-        return render(request, 'evaluaciones/perfil.html', {
-            'nombre': nombre,
-            'invitado': False
-        })
+
+    # Si es especialista u otro
+    nombre = request.user.get_full_name() or request.user.username
+    return render(request, 'evaluaciones/perfil.html', {
+        'nombre': nombre,
+        'invitado': False
+    })
 
 def nosotros(request):
     return render(request, 'evaluaciones/nosotros.html')

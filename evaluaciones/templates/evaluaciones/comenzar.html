@@ -9,11 +9,25 @@
 
 {% block content %}
   <div class="comenzar-hero text-center py-5">
-    <h1>¿Cómo quieres jugar?</h1>
-    <p class="lead mb-4">Elige si inicias sesión o entras como invitado</p>
-    <div class="d-flex justify-content-center gap-4">
-      <a href="{% url 'perfil_libre' %}" class="btn btn-secondary">Entrar como invitado</a>
-      <a href="{% url 'login' %}"          class="btn btn-primary">Iniciar sesión</a>
-    </div>
+    {% if user.is_authenticated %}
+      <h1>¡Hola {{ user.username }}!</h1>
+      <p class="lead mb-4">
+        Ya has iniciado sesión como 
+        {% with user.perfil.rol as rol %}
+          {% if rol == "nino" %}<strong>Niño</strong>
+          {% elif rol == "especialista" %}<strong>Especialista</strong>
+          {% else %}<strong>Invitado</strong>
+          {% endif %}
+        {% endwith %}
+      </p>
+      <a href="{% url 'perfil' %}" class="btn btn-primary">Ir a mi perfil</a>
+    {% else %}
+      <h1>¿Cómo quieres jugar?</h1>
+      <p class="lead mb-4">Elige si inicias sesión o entras como invitado</p>
+      <div class="d-flex justify-content-center gap-4">
+        <a href="{% url 'perfil_libre' %}" class="btn btn-secondary">Entrar como invitado</a>
+        <a href="{% url 'login' %}" class="btn btn-primary">Iniciar sesión</a>
+      </div>
+    {% endif %}
   </div>
 {% endblock %}

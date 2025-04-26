@@ -18,19 +18,19 @@ class Perfil(models.Model):
         return f"{self.user.username} ({self.get_rol_display()})"
 
 # ---------------------------
-# NIÑO
+# NIÑO (vinculado a User)
 # ---------------------------
 class Nino(models.Model):
-    nombre = models.CharField(max_length=100)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     fecha_nacimiento = models.DateField()
     genero = models.CharField(max_length=10, choices=[('M', 'Masculino'), ('F', 'Femenino')])
     email = models.EmailField(unique=True, null=True, blank=True)
 
     def __str__(self):
-        return self.nombre
+        return self.user.get_full_name() or self.user.username
 
 # ---------------------------
-# ESPECIALISTA
+# ESPECIALISTA (vinculado a Perfil)
 # ---------------------------
 class Especialista(models.Model):
     perfil = models.OneToOneField(Perfil, on_delete=models.CASCADE)
@@ -69,7 +69,7 @@ class IntentoJuego(models.Model):
     fecha = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.nino.nombre} – {self.juego.nombre} – {self.resultado}"
+        return f"{self.nino.user.username} – {self.juego.nombre} – {self.resultado}"
 
 # ---------------------------
 # RESULTADOS
@@ -82,7 +82,7 @@ class Resultado(models.Model):
     fecha = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Resultado {self.nino.nombre} en {self.juego.nombre}"
+        return f"Resultado {self.nino.user.username} en {self.juego.nombre}"
 
 # ---------------------------
 # EVALUACIÓN
@@ -95,4 +95,4 @@ class Evaluacion(models.Model):
     observaciones = models.TextField(null=True, blank=True)
 
     def __str__(self):
-        return f"Evaluación de {self.nino.nombre} – {self.fecha:%Y-%m-%d %H:%M}"
+        return f"Evaluación de {self.nino.user.username} – {self.fecha:%Y-%m-%d %H:%M}"

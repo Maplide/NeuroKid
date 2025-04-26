@@ -1,4 +1,3 @@
-{# templates/evaluaciones/perfil.html #}
 {% extends 'evaluaciones/base.html' %}
 {% load static %}
 
@@ -6,24 +5,38 @@
 
 {% block content %}
 <div class="container mt-5">
-  <h1 class="text-center mb-4">
-    ¡Bienvenido{% if invitado %}, Usuario Libre{% endif %}!
-  </h1>
 
-  <div class="row g-4">
+  {# 1. Datos del niño autenticado #}
+  {% if nino %}
+    <div class="card mb-5 shadow-sm">
+      <div class="row g-0 align-items-center">
+        <div class="col-md-3 text-center">
+          <img src="{% static 'images/avatar_nino.png' %}" alt="Avatar" class="img-fluid p-3" style="max-height: 160px;">
+        </div>
+        <div class="col-md-9">
+          <div class="card-body">
+            <h3 class="card-title">{{ nino.nombre }}</h3>
+            <p class="mb-1"><strong>Fecha de nacimiento:</strong> {{ nino.fecha_nacimiento }}</p>
+            <p class="mb-1"><strong>Género:</strong> {{ nino.get_genero_display }}</p>
+            <p class="mb-1"><strong>Email:</strong> {{ nino.email }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  {# 2. Juegos disponibles #}
+  <h4 class="mb-3">Juegos Disponibles</h4>
+  <div class="row g-4 mb-5">
+
     <!-- EmoMatch (TEA) -->
     <div class="col-sm-6 col-md-4 col-lg-3">
       <div class="card h-100 text-center p-3">
-        <img src="{% static 'images/game_emo_match_thumb.png' %}"
-             class="card-img-top mx-auto mb-2"
-             style="width:80px; height:80px;"
-             alt="EmoMatch">
+        <img src="{% static 'images/game_emo_match_thumb.png' %}" class="card-img-top mx-auto mb-2" style="width:80px; height:80px;" alt="EmoMatch">
         <div class="card-body d-flex flex-column">
           <h5 class="card-title">EmoMatch</h5>
           <p class="card-text text-muted">TEA</p>
-          <a href="{% url 'juego_emo_match' %}" class="btn btn-primary mt-auto">
-            Jugar
-          </a>
+          <a href="{% url 'juego_emo_match' %}" class="btn btn-primary mt-auto">Jugar</a>
         </div>
       </div>
     </div>
@@ -31,16 +44,11 @@
     <!-- Atención Turbo (TDHA) -->
     <div class="col-sm-6 col-md-4 col-lg-3">
       <div class="card h-100 text-center p-3">
-        <img src="{% static 'images/game_turbo_thumb.png' %}"
-             class="card-img-top mx-auto mb-2"
-             style="width:80px; height:80px;"
-             alt="Atención Turbo">
+        <img src="{% static 'images/game_turbo_thumb.png' %}" class="card-img-top mx-auto mb-2" style="width:80px; height:80px;" alt="Turbo">
         <div class="card-body d-flex flex-column">
           <h5 class="card-title">Atención Turbo</h5>
           <p class="card-text text-muted">TDHA</p>
-          <a href="{% url 'juego_turbo' %}" class="btn btn-primary mt-auto">
-            Jugar
-          </a>
+          <a href="{% url 'juego_turbo' %}" class="btn btn-primary mt-auto">Jugar</a>
         </div>
       </div>
     </div>
@@ -48,37 +56,62 @@
     <!-- Mano Firme -->
     <div class="col-sm-6 col-md-4 col-lg-3">
       <div class="card h-100 text-center p-3">
-        <img src="{% static 'images/game_mano_firme_thumb.png' %}"
-            class="card-img-top mx-auto mb-2"
-            style="width:80px; height:80px;"
-            alt="Mano Firme">
+        <img src="{% static 'images/game_mano_firme_thumb.png' %}" class="card-img-top mx-auto mb-2" style="width:80px; height:80px;" alt="Mano Firme">
         <div class="card-body d-flex flex-column">
           <h5 class="card-title">Mano Firme</h5>
           <p class="card-text text-muted">Discapacidad motora</p>
-          <a href="{% url 'juego_mano_firme' %}" class="btn btn-primary mt-auto">
-            Jugar
-          </a>
+          <a href="{% url 'juego_mano_firme' %}" class="btn btn-primary mt-auto">Jugar</a>
         </div>
       </div>
     </div>
 
-    <!-- Respira y Flota (Estrés) -->
+    <!-- Respira y Flota -->
     <div class="col-sm-6 col-md-4 col-lg-3">
       <div class="card h-100 text-center p-3">
-        <img src="{% static 'images/game_respira_flota_thumb.png' %}"
-             class="card-img-top mx-auto mb-2"
-             style="width:80px; height:80px;"
-             alt="Respira y Flota">
+        <img src="{% static 'images/game_respira_flota_thumb.png' %}" class="card-img-top mx-auto mb-2" style="width:80px; height:80px;" alt="Respira y Flota">
         <div class="card-body d-flex flex-column">
           <h5 class="card-title">Respira y Flota</h5>
           <p class="card-text text-muted">Estrés</p>
-          <a href="{% url 'juego_respira_flota' %}" class="btn btn-primary mt-auto">
-            Jugar
-          </a>
+          <a href="{% url 'juego_respira_flota' %}" class="btn btn-primary mt-auto">Jugar</a>
         </div>
       </div>
     </div>
-    
+
   </div>
+
+  {# 3. Historial de intentos #}
+  {% if intentos %}
+    <h4 class="mb-3">Historial de Juegos</h4>
+    {% for juego, lista in intentos.items %}
+      <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <strong>{{ juego }}</strong>
+        </div>
+        <div class="card-body p-0">
+          <table class="table table-sm table-bordered mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>#</th>
+                <th>Resultado</th>
+                <th>Fecha</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for intento in lista %}
+                <tr>
+                  <td>{{ forloop.counter }}</td>
+                  <td>{{ intento.resultado }}</td>
+                  <td>{{ intento.fecha|date:"d/m/Y H:i" }}</td>
+                </tr>
+              {% empty %}
+                <tr><td colspan="3" class="text-center text-muted">No hay registros</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    {% endfor %}
+  {% endif %}
+
 </div>
 {% endblock %}
