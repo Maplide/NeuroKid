@@ -1,0 +1,46 @@
+{% extends 'evaluaciones/base.html' %}
+{% load static %}
+{% block title %}Dashboard | NeuroKid{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4 text-center">Dashboard de Evaluaciones IA</h2>
+
+  <div class="row text-center mb-5">
+    {% for label, count in resumen.items %}
+      <div class="col-md-3">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">{{ label }}</h5>
+            <p class="display-5">{{ count }}</p>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <h4>Últimos resultados por niño</h4>
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>Niño</th>
+        <th>Juego</th>
+        <th>Predicción IA</th>
+        <th>Confianza</th>
+        <th>Fecha</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in resultados %}
+        <tr>
+          <td>{{ r.nino.user.username }}</td>
+          <td>{{ r.juego.nombre }}</td>
+          <td>{{ r.prediccion }}</td>
+          <td>{{ r.probabilidad|floatformat:2 }}</td>
+          <td>{{ r.fecha|date:"d/m/Y H:i" }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

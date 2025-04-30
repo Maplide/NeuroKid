@@ -14,6 +14,9 @@ urlpatterns = [
     path('perfil/',                views.perfil,             name='perfil'),
     path('perfil/<int:nino_id>/',  views.perfil,             name='perfil'),
     
+    path('completar/nino/', views.completar_datos_nino, name='completar_nino'),
+    path('completar/especialista/', views.completar_datos_especialista, name='completar_especialista'),
+
     path('comenzar/',              views.comenzar,               name='comenzar'),
     path('nosotros/',              views.nosotros,               name='nosotros'),
     path('servicios/',             views.servicios,              name='servicios'),
@@ -25,4 +28,6 @@ urlpatterns = [
     path('games/respira_flota/',   views.juego_respira_flota,    name='juego_respira_flota'),
     
     path('api/registro_intento/',  views.api_registrar_intento,  name='api_registro_intento'),
+
+    path('dashboard/', views.dashboard_especialista, name='dashboard_especialista'),
 ]

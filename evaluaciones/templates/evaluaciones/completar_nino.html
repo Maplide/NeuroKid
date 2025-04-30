@@ -1,0 +1,35 @@
+{% extends 'evaluaciones/base.html' %}
+{% load static %}
+
+{% block title %}Completar Datos Niño{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h3 class="mb-4 text-center">Completar Información del Niño</h3>
+
+  <form method="post">
+    {% csrf_token %}
+
+    <div class="mb-3">
+      <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
+      <input type="date" class="form-control" name="fecha_nacimiento" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="genero" class="form-label">Género</label>
+      <select class="form-select" name="genero" required>
+        <option value="">Seleccione</option>
+        <option value="M">Masculino</option>
+        <option value="F">Femenino</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label for="email" class="form-label">Correo electrónico</label>
+      <input type="email" class="form-control" name="email" required value="{{ request.user.email }}">
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+  </form>
+</div>
+{% endblock %}

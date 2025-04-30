@@ -9,6 +9,9 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from evaluaciones.utils.ia import predecir_diagnostico
 from django.http import JsonResponse
+from django.utils.dateparse import parse_date
+
+import datetime
 
 import numpy as np
 
@@ -56,9 +59,64 @@ def registro(request):
         )
         Perfil.objects.create(user=user, rol=rol)
         auth_login(request, user)
-        return redirect('perfil')
-    
+
+        if rol == 'nino':
+            return redirect('completar_nino')
+        elif rol == 'especialista':
+            return redirect('completar_especialista')
+
+        return redirect('perfil')  # Fallback
+
     return render(request, 'evaluaciones/registro.html')
+
+@login_required
+def completar_datos_nino(request):
+    if request.method == "POST":
+        print("🟢 POST recibido:", request.POST)
+
+        fecha_nacimiento = parse_date(request.POST.get("fecha_nacimiento"))
+        genero = request.POST.get("genero")
+        email = request.POST.get("email")
+
+        try:
+            if not fecha_nacimiento:
+                raise ValueError("Fecha inválida")
+
+            Nino.objects.create(
+                user=request.user,
+                fecha_nacimiento=fecha_nacimiento,
+                genero=genero,
+                email=email
+            )
+            return redirect('perfil')
+
+        except Exception as e:
+            print("❌ Error al guardar:", e)
+            messages.error(request, "No se pudo completar el registro del niño.")
+
+    return render(request, 'evaluaciones/completar_nino.html')
+@login_required
+def completar_datos_especialista(request):
+    perfil = Perfil.objects.filter(user=request.user, rol='especialista').first()
+    if not perfil:
+        return redirect('perfil')  # Seguridad: solo especialistas acceden
+
+    if request.method == 'POST':
+        dni = request.POST.get('dni')
+        rne = request.POST.get('rne')
+        telefono = request.POST.get('telefono')
+        institucion = request.POST.get('institucion')
+
+        if dni and rne and telefono and institucion:
+            especialista, creado = Especialista.objects.get_or_create(perfil=perfil)
+            especialista.dni = dni
+            especialista.rne = rne
+            especialista.telefono = telefono
+            especialista.institucion = institucion
+            especialista.save()
+            return redirect('perfil')
+
+    return render(request, 'evaluaciones/completar_especialista.html')
 
 def login_view(request):
     if request.method == 'POST':
@@ -66,7 +124,16 @@ def login_view(request):
         if form.is_valid():
             user = form.get_user()
             auth_login(request, user)
-            return redirect('perfil')
+
+            perfil = Perfil.objects.filter(user=user).first()
+            if perfil:
+                if perfil.rol == 'nino':
+                    return redirect('completar_nino')
+                elif perfil.rol == 'especialista':
+                    return redirect('completar_especialista')
+
+            return redirect('perfil')  # Fallback
+
     else:
         form = AuthenticationForm()
     return render(request, 'evaluaciones/login.html', {'form': form})
@@ -87,24 +154,14 @@ def perfil_libre(request):
 
 @login_required
 def perfil(request, nino_id=None):
-    """
-    Perfil de niño o especialista, requiere login.
-    """
-    # Si pasamos un nino_id explícito
-    if nino_id:
-        nino = get_object_or_404(Nino, id=nino_id)
-        return render(request, 'evaluaciones/perfil.html', {
-            'nino': nino,
-            'invitado': False
-        })
-
     perfil = Perfil.objects.filter(user=request.user).first()
 
+    # Vista personalizada para Niño
     if perfil and perfil.rol == 'nino':
-        # Asumimos que email de User = email en Nino
         nino = Nino.objects.filter(user=request.user).first()
-        # HISTORIAL DE INTENTOS POR JUEGO
         intentos_por_juego = {}
+        resultados_ia = {}
+
         if nino:
             intentos = IntentoJuego.objects.filter(nino=nino).select_related('juego').order_by('-fecha')
             for intento in intentos:
@@ -113,16 +170,30 @@ def perfil(request, nino_id=None):
                     intentos_por_juego[nombre_juego] = []
                 intentos_por_juego[nombre_juego].append(intento)
 
+            # Obtener últimos resultados IA por juego
+            for r in ResultadoIA.objects.filter(nino=nino).select_related('juego').order_by('juego', '-fecha'):
+                resultados_ia[r.juego.nombre] = r  # sobrescribe dejando el más reciente
+
         return render(request, 'evaluaciones/perfil.html', {
             'nino': nino,
             'invitado': False,
-            'intentos': intentos_por_juego
+            'intentos': intentos_por_juego,
+            'resultados_ia': resultados_ia
         })
 
-    # Si es especialista u otro
-    nombre = request.user.get_full_name() or request.user.username
+    # Vista personalizada para Especialista
+    elif perfil and perfil.rol == 'especialista':
+        resultados_globales = ResultadoIA.objects.select_related('nino', 'juego').order_by('-fecha')
+        return render(request, 'evaluaciones/perfil.html', {
+            'nombre': request.user.get_full_name() or request.user.username,
+            'rol': 'especialista',
+            'resultados_globales': resultados_globales,
+            'invitado': False
+        })
+
+    # Otro tipo de usuario
     return render(request, 'evaluaciones/perfil.html', {
-        'nombre': nombre,
+        'nombre': request.user.get_full_name() or request.user.username,
         'invitado': False
     })
 
@@ -188,34 +259,80 @@ def preparar_vector_para_modelo(nombre_juego, datos_juego):
 def api_registrar_intento(request):
     if request.method == "POST" and request.user.is_authenticated:
         data = json.loads(request.body)
+        print("📥 Datos recibidos:", data)
+        print("👤 Usuario autenticado:", request.user.username)
 
         try:
             nino = Nino.objects.get(user=request.user)
+        except Nino.DoesNotExist:
+            print("❌ Niño no encontrado para el usuario.")
+            return JsonResponse({"error": "Niño no encontrado"}, status=400)
+
+        try:
             juego = Juego.objects.get(nombre=data.get("juego"))
+        except Juego.DoesNotExist:
+            print("❌ Juego no encontrado:", data.get("juego"))
+            return JsonResponse({"error": "Juego no encontrado"}, status=400)
 
-            # Guarda el intento clásico
-            IntentoJuego.objects.create(
-                juego=juego,
-                nino=nino,
-                resultado=data.get("resultado", 0)
-            )
+        # Guardar intento clásico
+        IntentoJuego.objects.create(
+            juego=juego,
+            nino=nino,
+            resultado=data.get("resultado", 0)
+        )
 
-            # ---------------------
-            # Ahora lanzamos la IA
-            # ---------------------
-            datos_para_modelo = preparar_vector_para_modelo(juego.nombre, data)
-            prediccion, probabilidad = predecir_diagnostico(datos_para_modelo)
+        # IA
+        datos_vector = preparar_vector_para_modelo(juego.nombre, data)
+        prediccion, probabilidad = predecir_diagnostico(datos_vector)
 
-            ResultadoIA.objects.create(
-                nino=nino,
-                juego=juego,
-                prediccion=prediccion,
-                probabilidad=probabilidad
-            )
+        # Guardar resultado IA (último por juego)
+        ResultadoIA.objects.update_or_create(
+            nino=nino,
+            juego=juego,
+            defaults={
+                "prediccion": prediccion,
+                "probabilidad": probabilidad
+            }
+        )
 
-            return JsonResponse({"status": "ok", "prediccion": prediccion, "probabilidad": f"{probabilidad:.2f}"})
-        
-        except (Nino.DoesNotExist, Juego.DoesNotExist):
-            return JsonResponse({"error": "Datos no válidos"}, status=400)
+        print(f"✅ Resultado IA guardado: {juego.nombre} = {prediccion} ({probabilidad:.2f})")
+        return JsonResponse({
+            "status": "ok",
+            "prediccion": prediccion,
+            "probabilidad": f"{probabilidad:.2f}"
+        })
 
+    print("🚫 Usuario no autenticado o método inválido.")
     return JsonResponse({"error": "no autorizado"}, status=403)
+
+@login_required
+def dashboard_especialista(request):
+    perfil = Perfil.objects.filter(user=request.user).first()
+    if not perfil or perfil.rol != 'especialista':
+        return redirect('perfil')  # Solo especialistas pueden entrar
+
+    # Última predicción por niño y por juego
+    predicciones = ResultadoIA.objects.select_related('nino', 'juego') \
+        .order_by('nino__id', 'juego__id', '-fecha')
+
+    resultados = {}
+    for pred in predicciones:
+        key = (pred.nino.id, pred.juego.id)
+        if key not in resultados:
+            resultados[key] = pred  # Solo guardamos la más reciente
+
+    # Agrupamos por categoría
+    resumen = {
+        "TEA": 0,
+        "TDAH": 0,
+        "Discapacidad Intelectual": 0,
+        "Ansiedad/Depresión": 0,
+    }
+    for p in resultados.values():
+        if p.prediccion in resumen:
+            resumen[p.prediccion] += 1
+
+    return render(request, 'evaluaciones/dashboard_especialista.html', {
+        'resumen': resumen,
+        'resultados': resultados.values()
+    })

@@ -1,0 +1,36 @@
+{% extends 'evaluaciones/base.html' %}
+{% load static %}
+
+{% block title %}Completar Datos Especialista{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h3 class="mb-4 text-center">Completar Información del Especialista</h3>
+
+  <form method="post">
+    {% csrf_token %}
+
+    <div class="mb-3">
+      <label for="dni" class="form-label">DNI</label>
+      <input type="text" class="form-control" name="dni" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="rne" class="form-label">RNE (Registro Nacional de Especialistas)</label>
+      <input type="text" class="form-control" name="rne" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="telefono" class="form-label">Teléfono</label>
+      <input type="text" class="form-control" name="telefono" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="institucion" class="form-label">Institución</label>
+      <input type="text" class="form-control" name="institucion" required>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+  </form>
+</div>
+{% endblock %}

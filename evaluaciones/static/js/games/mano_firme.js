@@ -9,10 +9,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const finalHits   = document.getElementById('finalHitsFirme');
   const finalMisses = document.getElementById('finalMissesFirme');
   const retryBtn    = document.getElementById('retryFirme');
-  
+
   let hits=0, misses=0, times=[], round=0, maxRounds=10;
   let circle, timerId, appearTime;
-  
+  let enRonda = false;
+
   function spawnCircle() {
     if (!circle) {
       circle = document.createElement('div');
@@ -21,68 +22,103 @@ document.addEventListener('DOMContentLoaded', () => {
       circle.addEventListener('mouseover', onHit);
     }
     const { width, height } = gameArea.getBoundingClientRect();
-    const x = Math.random()*(width-50), y = Math.random()*(height-50);
+    const x = Math.random() * (width - 50), y = Math.random() * (height - 50);
     circle.style.left = `${x}px`;
     circle.style.top  = `${y}px`;
     circle.style.display = 'block';
     appearTime = performance.now();
-  
-    // si no entra el cursor en 1.5s → miss
+
+    enRonda = true;
     timerId = setTimeout(onMiss, 1500);
   }
-  
+
   function onHit() {
+    if (!enRonda) return;
+    enRonda = false;
+
     clearTimeout(timerId);
-    const delta = (performance.now() - appearTime)/1000;
+    const delta = (performance.now() - appearTime) / 1000;
     hits++; times.push(delta);
     updateStats();
     circle.style.display = 'none';
     nextRound();
   }
-  
+
   function onMiss() {
+    if (!enRonda) return;
+    enRonda = false;
+
     misses++;
     updateStats();
     circle.style.display = 'none';
     nextRound();
   }
-  
+
   function updateStats() {
     hitsEl.textContent   = hits;
     missesEl.textContent = misses;
     const avg = times.length
-              ? (times.reduce((a,b)=>a+b,0)/times.length).toFixed(2)
+              ? (times.reduce((a, b) => a + b, 0) / times.length).toFixed(2)
               : '0.00';
     avgEl.textContent = avg;
   }
-  
+
   function nextRound() {
-    round++;
-    if (round > maxRounds) return endGame();
-    // breve pausa
-    setTimeout(spawnCircle, 500);
+    if (round >= maxRounds) return endGame();  // Primero validamos
+    round++;                                    // Luego incrementamos
+    setTimeout(spawnCircle, 500);              // Y lanzamos la siguiente
   }
-  
+
   function startGame() {
-    hits=0; misses=0; times=[]; round=0;
+    hits = 0; misses = 0; times = []; round = 0;
     hitsEl.textContent = missesEl.textContent = '0';
     avgEl.textContent = '0.00';
     document.getElementById('controls').style.display = 'none';
     gameArea.style.display = 'block';
-    stats.style.display    = 'block';
-    spawnCircle();
+    stats.style.display = 'block';
+    nextRound();  // ✅ aquí empieza controlado
   }
-  
+
   function endGame() {
     finalHits.textContent   = hits;
     finalMisses.textContent = misses;
     endModal.show();
+
+    registrarResultadoIA(hits, misses, calcularPromedio());
   }
-  
+
+  function calcularPromedio() {
+    return times.length ? (times.reduce((a, b) => a + b, 0) / times.length).toFixed(2) : 0;
+  }
+
+  async function registrarResultadoIA(aciertos, fallos, tiempo) {
+    try {
+      const response = await fetch("/evaluaciones/api/registro_intento/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          juego: "Mano Firme",
+          resultado: aciertos,
+          aciertos: aciertos,
+          errores: fallos,
+          tiempo: tiempo
+        })
+      });
+
+      const data = await response.json();
+      if (data.status === "ok") {
+        console.log("✅ Resultado IA:", data.prediccion, data.probabilidad);
+      } else {
+        console.warn("⚠️ Error al registrar:", data);
+      }
+    } catch (error) {
+      console.error("❌ Error de red al registrar resultado IA:", error);
+    }
+  }
+
   startBtn.addEventListener('click', startGame);
   retryBtn.addEventListener('click', () => {
     endModal.hide();
     startGame();
   });
 });
-  
