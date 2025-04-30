@@ -7,9 +7,12 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.hashers import make_password
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
+from evaluaciones.utils.ia import predecir_diagnostico
 from django.http import JsonResponse
 
-from .models import Perfil, Nino, Especialista, Juego, IntentoJuego, Resultado, Evaluacion
+import numpy as np
+
+from .models import Perfil, Nino, Especialista, Juego, IntentoJuego, Resultado, Evaluacion, ResultadoIA
 
 import json
 
@@ -155,12 +158,64 @@ def juego_respira_flota(request):
         'invitado': not request.user.is_authenticated
     })
 
+def preparar_vector_para_modelo(nombre_juego, datos_juego):
+    """
+    Prepara los 10 valores de entrada simulados para cada juego.
+    """
+    vector = [0]*10  # Todos inicializados en 0
+
+    if nombre_juego == "EmoMatch":
+        vector[0] = datos_juego.get("resultado", 0)  # Intentos
+        vector[1] = datos_juego.get("tiempo_promedio", 0)  # Tiempo promedio por intento
+        vector[2] = 1  # Marcamos que jugó EmoMatch
+
+    elif nombre_juego == "Atención Turbo":
+        vector[3] = datos_juego.get("aciertos", 0)
+        vector[4] = datos_juego.get("fallos", 0)
+        vector[5] = datos_juego.get("tiempo_promedio", 0)
+
+    elif nombre_juego == "Mano Firme":
+        vector[6] = datos_juego.get("aciertos", 0)
+        vector[7] = datos_juego.get("errores", 0)
+        vector[8] = datos_juego.get("tiempo", 0)
+
+    elif nombre_juego == "Respira y Flota":
+        vector[9] = datos_juego.get("duracion_total", 0)
+
+    return np.array(vector)
+
 @csrf_exempt
 def api_registrar_intento(request):
-    if request.method=="POST" and request.user.is_authenticated:
+    if request.method == "POST" and request.user.is_authenticated:
         data = json.loads(request.body)
-        juego = Juego.objects.get(nombre="Emo‑Match")
-        nino  = Nino.objects.get(email=request.user.email)
-        IntentoJuego.objects.create(juego=juego, nino=nino, resultado=data["intentos"])
-        return JsonResponse({"status":"ok"})
-    return JsonResponse({"error":"no autorizado"}, status=403)
+
+        try:
+            nino = Nino.objects.get(user=request.user)
+            juego = Juego.objects.get(nombre=data.get("juego"))
+
+            # Guarda el intento clásico
+            IntentoJuego.objects.create(
+                juego=juego,
+                nino=nino,
+                resultado=data.get("resultado", 0)
+            )
+
+            # ---------------------
+            # Ahora lanzamos la IA
+            # ---------------------
+            datos_para_modelo = preparar_vector_para_modelo(juego.nombre, data)
+            prediccion, probabilidad = predecir_diagnostico(datos_para_modelo)
+
+            ResultadoIA.objects.create(
+                nino=nino,
+                juego=juego,
+                prediccion=prediccion,
+                probabilidad=probabilidad
+            )
+
+            return JsonResponse({"status": "ok", "prediccion": prediccion, "probabilidad": f"{probabilidad:.2f}"})
+        
+        except (Nino.DoesNotExist, Juego.DoesNotExist):
+            return JsonResponse({"error": "Datos no válidos"}, status=400)
+
+    return JsonResponse({"error": "no autorizado"}, status=403)
