@@ -27,6 +27,11 @@
     <span>Tiempo medio: <strong id="avgTime">0</strong> s</span>
   </div>
 
+  <div class="mb-3 text-center">
+    <button id="pauseBtn" class="btn btn-warning me-2">⏸️ Pausar</button>
+    <button id="resetBtn" class="btn btn-danger">🔄 Reiniciar</button>
+  </div>
+
   <!-- Botón Regresar -->
   <div class="text-center mb-3">
     {% if invitado %}
@@ -35,6 +40,7 @@
       <a href="{% url 'perfil' %}" class="btn btn-secondary">Regresar</a>
     {% endif %}
   </div>
+
 </div>
 
 <!-- Modal de fin de juego -->

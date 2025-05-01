@@ -9,12 +9,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const finalHits   = document.getElementById('finalHitsFirme');
   const finalMisses = document.getElementById('finalMissesFirme');
   const retryBtn    = document.getElementById('retryFirme');
+  const pauseBtn    = document.getElementById('pauseBtn');
+  const resetBtn    = document.getElementById('resetBtn');
 
   let hits=0, misses=0, times=[], round=0, maxRounds=10;
   let circle, timerId, appearTime;
   let enRonda = false;
+  let isPaused = false;
 
   function spawnCircle() {
+    if (isPaused) return; // 🔒 si está en pausa, no lanza
     if (!circle) {
       circle = document.createElement('div');
       circle.className = 'circle';
@@ -33,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function onHit() {
-    if (!enRonda) return;
+    if (!enRonda || isPaused) return;
     enRonda = false;
 
     clearTimeout(timerId);
@@ -45,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function onMiss() {
-    if (!enRonda) return;
+    if (!enRonda || isPaused) return;
     enRonda = false;
 
     misses++;
@@ -64,9 +68,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function nextRound() {
-    if (round >= maxRounds) return endGame();  // Primero validamos
-    round++;                                    // Luego incrementamos
-    setTimeout(spawnCircle, 500);              // Y lanzamos la siguiente
+    if (round >= maxRounds) return endGame();
+    round++;
+    setTimeout(spawnCircle, 500);
   }
 
   function startGame() {
@@ -76,7 +80,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('controls').style.display = 'none';
     gameArea.style.display = 'block';
     stats.style.display = 'block';
-    nextRound();  // ✅ aquí empieza controlado
+    isPaused = false;
+    pauseBtn.textContent = "⏸️ Pausar";
+    nextRound();
   }
 
   function endGame() {
@@ -120,5 +126,16 @@ document.addEventListener('DOMContentLoaded', () => {
   retryBtn.addEventListener('click', () => {
     endModal.hide();
     startGame();
+  });
+
+  pauseBtn.addEventListener('click', () => {
+    isPaused = !isPaused;
+    pauseBtn.textContent = isPaused ? "▶️ Reanudar" : "⏸️ Pausar";
+  });
+
+  resetBtn.addEventListener('click', () => {
+    if (confirm("¿Reiniciar el juego desde cero?")) {
+      location.reload();
+    }
   });
 });

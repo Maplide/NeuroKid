@@ -1,4 +1,3 @@
-// static/js/games/respira_flota.js
 document.addEventListener('DOMContentLoaded', () => {
   const bubble = document.getElementById('bubble');
   const cyclesSpan = document.getElementById('cycles');
@@ -7,20 +6,24 @@ document.addEventListener('DOMContentLoaded', () => {
   const finalAvgHold = document.getElementById('finalAvgHold');
   const endModal = new bootstrap.Modal(document.getElementById('endModal'));
   const retryBtn = document.getElementById('retryBtn');
+  const pauseBtn = document.getElementById('pauseBtn');
+  const resetBtn = document.getElementById('resetBtn');
 
   let holdStart = 0;
   const holdTimes = [];
   let cycles = 0;
   const maxCycles = 3;
+  let isPaused = false;
 
-  // Iniciar inhalación
   bubble.addEventListener('mousedown', () => {
+    if (isPaused || cycles >= maxCycles) return;
     holdStart = Date.now();
     bubble.classList.add('inhale');
   });
 
-  // Terminar inhalación
   bubble.addEventListener('mouseup', () => {
+    if (isPaused || cycles >= maxCycles) return;
+
     const hold = (Date.now() - holdStart) / 1000;
     bubble.classList.remove('inhale');
 
@@ -34,8 +37,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (cycles >= maxCycles) {
       finalCycles.textContent = cycles;
       finalAvgHold.textContent = avg.toFixed(2);
-
-      // Enviar al backend
       registrarResultadoIA(avg);
       endModal.show();
     }
@@ -43,23 +44,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
   retryBtn.addEventListener('click', () => {
     endModal.hide();
+    reiniciarJuego();
+  });
+
+  pauseBtn.addEventListener('click', () => {
+    isPaused = !isPaused;
+    pauseBtn.textContent = isPaused ? "▶️ Reanudar" : "⏸️ Pausar";
+  });
+
+  resetBtn.addEventListener('click', () => {
+    if (confirm("¿Reiniciar el juego desde cero?")) {
+      location.reload();
+    }
+  });
+
+  function reiniciarJuego() {
     holdTimes.length = 0;
     cycles = 0;
+    isPaused = false;
     cyclesSpan.textContent = '0';
     avgHoldSpan.textContent = '0.00';
-  });
+    pauseBtn.textContent = "⏸️ Pausar";
+  }
 
   async function registrarResultadoIA(promedio) {
     try {
       const response = await fetch("/evaluaciones/api/registro_intento/", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           juego: "Respira y Flota",
           resultado: promedio,
-          duracion_total: promedio  // Este dato lo usa el modelo
+          duracion_total: promedio
         })
       });
 

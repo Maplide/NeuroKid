@@ -2,14 +2,18 @@ document.addEventListener('DOMContentLoaded', () => {
   console.log("🟢 emo_match.js cargado correctamente");
 
   const emojis = ['😃','😞','😲','😠','😃','😞','😲','😠','😊'];
-  const totalPairs = Math.floor(emojis.length / 2); // 4 parejas
+  const totalPairs = Math.floor(emojis.length / 2);
   let board = document.getElementById('board');
+  let pauseBtn = document.getElementById('pauseBtn');
+  let resetBtn = document.getElementById('resetBtn');
+
   let first = null, second = null;
   let tries = 0;
   let times = [];
   let matchedPairs = 0;
+  let isPaused = false;
 
-  emojis.sort(() => Math.random() - 0.5); // Barajar
+  emojis.sort(() => Math.random() - 0.5);
 
   emojis.forEach(emoji => {
     const card = document.createElement('div');
@@ -21,7 +25,8 @@ document.addEventListener('DOMContentLoaded', () => {
     board.appendChild(card);
 
     card.addEventListener('click', () => {
-      if (card.classList.contains('flipped') || second) return;
+      if (isPaused || card.classList.contains('flipped') || second) return;
+
       card.classList.add('flipped');
 
       if (!first) {
@@ -33,6 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const back1 = first.card.querySelector('.back').textContent;
         const back2 = second.card.querySelector('.back').textContent;
+
         if (back1 === back2) {
           const elapsed = (second.time - first.time) / 1000;
           times.push(elapsed);
@@ -44,8 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
           if (matchedPairs === totalPairs) {
             setTimeout(() => {
-              alert(`¡Terminaste! 🎉\nIntentos: ${tries}\nTiempo medio: ${avg} s`);
-              console.log("✅ Juego terminado. Enviando resultado al servidor...");
+              alert(`¡Terminaste! 🎉\nIntentos: ${tries}\nTiempo medio: ${avg} s`);
               registrarResultadoIA(tries, parseFloat(avg));
               setTimeout(() => {
                 window.location.href = '/evaluaciones/perfil/';
@@ -63,7 +68,20 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // 🔁 Enviar intento al backend
+  // Botón Pausar/Reanudar
+  pauseBtn.addEventListener('click', () => {
+    isPaused = !isPaused;
+    pauseBtn.textContent = isPaused ? "▶️ Reanudar" : "⏸️ Pausar";
+  });
+
+  // Botón Reiniciar
+  resetBtn.addEventListener('click', () => {
+    if (confirm("¿Seguro que deseas reiniciar el juego?")) {
+      location.reload();
+    }
+  });
+
+  // Enviar intento al backend
   async function registrarResultadoIA(intentos, avgTime) {
     const payload = {
       juego: "EmoMatch",
@@ -71,20 +89,14 @@ document.addEventListener('DOMContentLoaded', () => {
       tiempo_promedio: avgTime
     };
 
-    console.log("📤 Enviando a API:", payload);
-
     try {
       const response = await fetch("/evaluaciones/api/registro_intento/", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
       });
 
       const data = await response.json();
-      console.log("📥 Respuesta de API:", data);
-
       if (data.status === "ok") {
         console.log("✅ Resultado registrado correctamente");
       } else {

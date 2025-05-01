@@ -33,6 +33,11 @@
     <span>Reacción media: <strong id="avgTime">0.00</strong> s</span>
   </div>
 
+  <div class="mb-3 text-center">
+    <button id="pauseBtn" class="btn btn-warning me-2">⏸️ Pausar</button>
+    <button id="resetBtn" class="btn btn-danger">🔄 Reiniciar</button>
+  </div>
+
   <!-- Botón Regresar -->
   <div class="text-center mb-3">
     {% if invitado %}
@@ -40,7 +45,7 @@
     {% else %}
       <a href="{% url 'perfil' %}" class="btn btn-secondary">Regresar</a>
     {% endif %}
-  </div>
+  </div>  
 
 </div>
 
@@ -55,6 +60,8 @@
       </p>
       <div class="d-flex justify-content-center gap-2">
         <button id="retryFirme" class="btn btn-primary">Repetir</button>
+        <button id="pauseBtn" class="btn btn-warning ms-2">Pausar</button>
+        <button id="restartBtn" class="btn btn-danger ms-2">Reiniciar</button>
         <a href="{% url 'perfil' %}" class="btn btn-secondary">Volver al perfil</a>
       </div>
     </div>
