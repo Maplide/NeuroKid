@@ -128,12 +128,18 @@ def login_view(request):
             perfil = Perfil.objects.filter(user=user).first()
             if perfil:
                 if perfil.rol == 'nino':
-                    return redirect('completar_nino')
+                    nino = Nino.objects.filter(user=user).first()
+                    if not nino:
+                        return redirect('completar_nino')
+                    return redirect('perfil')
+
                 elif perfil.rol == 'especialista':
-                    return redirect('completar_especialista')
+                    especialista = Especialista.objects.filter(perfil=perfil).first()
+                    if not especialista:
+                        return redirect('completar_especialista')
+                    return redirect('perfil')
 
-            return redirect('perfil')  # Fallback
-
+            return redirect('perfil')  # Otro tipo
     else:
         form = AuthenticationForm()
     return render(request, 'evaluaciones/login.html', {'form': form})
@@ -183,10 +189,12 @@ def perfil(request, nino_id=None):
 
     # Vista personalizada para Especialista
     elif perfil and perfil.rol == 'especialista':
+        especialista = Especialista.objects.get(perfil=perfil)  # <-- Añade esta línea
         resultados_globales = ResultadoIA.objects.select_related('nino', 'juego').order_by('-fecha')
         return render(request, 'evaluaciones/perfil.html', {
             'nombre': request.user.get_full_name() or request.user.username,
             'rol': 'especialista',
+            'especialista': especialista,  # <-- Y esta línea
             'resultados_globales': resultados_globales,
             'invitado': False
         })

@@ -4,33 +4,35 @@
 {% block title %}Completar Datos Especialista{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-  <h3 class="mb-4 text-center">Completar Información del Especialista</h3>
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+  <div class="card shadow-lg p-4" style="width: 100%; max-width: 500px;">
+    <h4 class="text-center mb-4 text-primary">Completar Información del Especialista</h4>
 
-  <form method="post">
-    {% csrf_token %}
+    <form method="post" novalidate>
+      {% csrf_token %}
 
-    <div class="mb-3">
-      <label for="dni" class="form-label">DNI</label>
-      <input type="text" class="form-control" name="dni" required>
-    </div>
+      <div class="mb-3">
+        <label for="dni" class="form-label">DNI</label>
+        <input type="text" class="form-control" name="dni" id="dni" required>
+      </div>
 
-    <div class="mb-3">
-      <label for="rne" class="form-label">RNE (Registro Nacional de Especialistas)</label>
-      <input type="text" class="form-control" name="rne" required>
-    </div>
+      <div class="mb-3">
+        <label for="rne" class="form-label">RNE (Registro Nacional de Especialistas)</label>
+        <input type="text" class="form-control" name="rne" id="rne" required>
+      </div>
 
-    <div class="mb-3">
-      <label for="telefono" class="form-label">Teléfono</label>
-      <input type="text" class="form-control" name="telefono" required>
-    </div>
+      <div class="mb-3">
+        <label for="telefono" class="form-label">Teléfono</label>
+        <input type="text" class="form-control" name="telefono" id="telefono" required>
+      </div>
 
-    <div class="mb-3">
-      <label for="institucion" class="form-label">Institución</label>
-      <input type="text" class="form-control" name="institucion" required>
-    </div>
+      <div class="mb-4">
+        <label for="institucion" class="form-label">Institución</label>
+        <input type="text" class="form-control" name="institucion" id="institucion" required>
+      </div>
 
-    <button type="submit" class="btn btn-primary">Guardar</button>
-  </form>
+      <button type="submit" class="btn btn-primary w-100">Guardar Información</button>
+    </form>
+  </div>
 </div>
 {% endblock %}

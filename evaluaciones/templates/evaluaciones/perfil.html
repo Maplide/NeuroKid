@@ -18,7 +18,7 @@
             <h3 class="card-title">{{ nino.user.username }}</h3>
             <p class="mb-1"><strong>Fecha de nacimiento:</strong> {{ nino.fecha_nacimiento }}</p>
             <p class="mb-1"><strong>Género:</strong> {{ nino.get_genero_display }}</p>
-            <p class="mb-1"><strong>Email:</strong> {{ nino.user.email }}</p>
+            <p class="mb-1"><strong>Email:</strong> {{ nino.email }}</p>
           </div>
         </div>
       </div>
@@ -134,10 +134,20 @@
 
   {# Panel para Especialista #}
   {% if rol == 'especialista' %}
-    <div class="card shadow-sm">
-      <div class="card-body">
-        <h4 class="card-title mb-3">Bienvenido, {{ nombre }}</h4>
-        <p class="text-muted">A continuación se listan los últimos resultados de predicción IA por niño y juego.</p>
+    <div class="card mb-5 shadow-sm">
+      <div class="row g-0 align-items-center">
+        <div class="col-md-3 text-center">
+          <img src="{% static 'images/avatar_especialista.jpg' %}" alt="Avatar" class="img-fluid p-3" style="max-height: 160px;">
+        </div>
+        <div class="col-md-9">
+          <div class="card-body">
+            <h3 class="card-title">{{ especialista.perfil.user.username }}</h3>
+            <p class="mb-1"><strong>DNI:</strong> {{ especialista.dni }}</p>
+            <p class="mb-1"><strong>RNE:</strong> {{ especialista.rne }}</p>
+            <p class="mb-1"><strong>Teléfono:</strong> {{ especialista.telefono }}</p>
+            <p class="mb-1"><strong>Institución:</strong> {{ especialista.institucion }}</p>
+          </div>
+        </div>
       </div>
     </div>
 
