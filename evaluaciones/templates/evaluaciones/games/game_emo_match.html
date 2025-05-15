@@ -51,7 +51,11 @@
       <p class="mb-4">Felicitaciones por completar el juego.</p>
       <div class="d-flex justify-content-center gap-2">
         <button id="retryBtn" class="btn btn-primary">Repetir</button>
-        <a href="{% url 'perfil' %}" class="btn btn-secondary">Volver al inicio</a>
+        {% if invitado %}
+          <a href="{% url 'perfil_libre' %}" class="btn btn-secondary">Volver al perfil</a>
+        {% else %}
+          <a href="{% url 'perfil' %}" class="btn btn-secondary">Volver al perfil</a>
+        {% endif %}
       </div>
     </div>
   </div>

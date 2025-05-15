@@ -59,8 +59,12 @@
         Fallos:   <strong id="finalMissesFirme"></strong>
       </p>
       <div class="d-flex justify-content-center gap-2">
-        <button id="retryFirme" class="btn btn-primary">Repetir</button>
-        <a href="{% url 'perfil' %}" class="btn btn-secondary">Volver al perfil</a>
+        <button id="retryBtn" class="btn btn-primary">Repetir</button>
+        {% if invitado %}
+          <a href="{% url 'perfil_libre' %}" class="btn btn-secondary">Volver al perfil</a>
+        {% else %}
+          <a href="{% url 'perfil' %}" class="btn btn-secondary">Volver al perfil</a>
+        {% endif %}
       </div>
     </div>
   </div>

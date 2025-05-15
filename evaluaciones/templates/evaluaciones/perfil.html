@@ -1,5 +1,6 @@
 {% extends 'evaluaciones/base.html' %}
 {% load static %}
+{% load form_extras %} {# o {% load extra_filters %} si creaste ese archivo #}
 
 {% block title %}Mi Perfil | NeuroKid{% endblock %}
 
@@ -97,6 +98,28 @@
       </div>
     {% endif %}
 
+    <h4 class="mt-5 mb-3">Colección de Medallas</h4>
+    <div class="row g-3 mb-5">
+      {% for juego, datos in todas_medallas.items %}
+        {% with medallas|get_item:juego as medalla %}
+          <div class="col-sm-6 col-md-4 col-lg-3">
+            <div class="card text-center shadow-sm">
+              <div class="card-body">
+                <h5 class="card-title">{{ juego }}</h5>
+                {% if medalla %}
+                  <div style="font-size: 2rem;">{{ medalla }}</div>
+                  <p class="text-success mb-0">Obtenida</p>
+                {% else %}
+                  <div style="font-size: 2rem; opacity: 0.3;">{{ datos.0 }}</div>
+                  <p class="text-muted mb-0">Pendiente (≥ {{ datos.1 }})</p>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        {% endwith %}
+      {% endfor %}
+    </div>
+
     {# Historial de intentos #}
     {% if intentos %}
       <h4 class="mt-5 mb-3">Historial de Juegos</h4>
@@ -104,6 +127,11 @@
         <div class="card mb-4 shadow-sm">
           <div class="card-header bg-primary text-white">
             <strong>{{ juego }}</strong>
+            {% with medallas|get_item:juego as medalla %}
+              {% if medalla %}
+                <span class="badge bg-warning text-dark ms-2">{{ medalla }}</span>
+              {% endif %}
+            {% endwith %}
           </div>
           <div class="card-body p-0">
             <table class="table table-sm table-bordered mb-0">
@@ -154,7 +182,7 @@
     {% if resultados_globales %}
       <div class="card mt-4 shadow-sm">
         <div class="card-header bg-primary text-white">
-          <strong>Resultados IA – Todos los niños</strong>
+          <strong>Resultados IA - Todos los niños</strong>
         </div>
         <div class="card-body p-0">
           <table class="table table-bordered table-sm mb-0">
@@ -184,7 +212,136 @@
         </div>
       </div>
     {% endif %}
+
+    <div class="text-center mb-4">
+      <a href="{% url 'dashboard_especialista' %}" class="btn btn-outline-primary btn-lg">
+        <i class="fas fa-chart-line me-2"></i> Ver Dashboard
+      </a>
+    </div>
   {% endif %}
+
+    {# Panel para Invitado / Modo Libre #}
+    {% if invitado %}
+      <div class="alert alert-info mt-4">
+        <h4 class="text-center">Estás jugando en modo libre 🎮</h4>
+        <p class="text-center text-muted">Tus intentos se están registrando como <strong>{{ nombre }}</strong></p>
+      </div>
+
+      <div class="row g-4 mb-5">
+        <!-- EmoMatch -->
+        <div class="col-sm-6 col-md-4 col-lg-3">
+          <div class="card h-100 text-center p-3">
+            <img src="{% static 'images/game_emo_match_thumb.png' %}" class="card-img-top mx-auto mb-2" style="width:80px; height:80px;" alt="EmoMatch">
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title">EmoMatch</h5>
+              <p class="card-text text-muted">TEA</p>
+              <p class="small text-muted">Empareja emociones para reconocer expresiones faciales.</p>
+              <a href="{% url 'juego_emo_match' %}" class="btn btn-primary mt-auto">Jugar</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Turbo -->
+        <div class="col-sm-6 col-md-4 col-lg-3">
+          <div class="card h-100 text-center p-3">
+            <img src="{% static 'images/game_turbo_thumb.png' %}" class="card-img-top mx-auto mb-2" style="width:80px; height:80px;" alt="Turbo">
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title">Atención Turbo</h5>
+              <p class="card-text text-muted">TDHA</p>
+              <p class="small text-muted">Haz clic rápido y preciso para entrenar la atención.</p>
+              <a href="{% url 'juego_turbo' %}" class="btn btn-primary mt-auto">Jugar</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mano Firme -->
+        <div class="col-sm-6 col-md-4 col-lg-3">
+          <div class="card h-100 text-center p-3">
+            <img src="{% static 'images/game_mano_firme_thumb.png' %}" class="card-img-top mx-auto mb-2" style="width:80px; height:80px;" alt="Mano Firme">
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title">Mano Firme</h5>
+              <p class="card-text text-muted">Discapacidad motora</p>
+              <p class="small text-muted">Pasa el cursor con precisión para mejorar coordinación.</p>
+              <a href="{% url 'juego_mano_firme' %}" class="btn btn-primary mt-auto">Jugar</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Respira y Flota -->
+        <div class="col-sm-6 col-md-4 col-lg-3">
+          <div class="card h-100 text-center p-3">
+            <img src="{% static 'images/game_respira_flota_thumb.png' %}" class="card-img-top mx-auto mb-2" style="width:80px; height:80px;" alt="Respira y Flota">
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title">Respira y Flota</h5>
+              <p class="card-text text-muted">Estrés</p>
+              <p class="small text-muted">Controla tu respiración con un juego de relajación.</p>
+              <a href="{% url 'juego_respira_flota' %}" class="btn btn-primary mt-auto">Jugar</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {% if intentos %}
+        <h4 class="mt-4 mb-3">Historial de Juegos</h4>
+        {% for juego, lista in intentos.items %}
+          <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-primary text-white">
+              <strong>{{ juego }}</strong>
+              {% with medallas|get_item:juego as medalla %}
+                {% if medalla %}
+                  <span class="badge bg-warning text-dark ms-2">{{ medalla }}</span>
+                {% endif %}
+              {% endwith %}
+            </div>
+            <div class="card-body p-0">
+              <table class="table table-sm table-bordered mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th>#</th>
+                    <th>Resultado</th>
+                    <th>Fecha</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for intento in lista %}
+                    <tr>
+                      <td>{{ forloop.counter }}</td>
+                      <td>{{ intento.resultado }}</td>
+                      <td>{{ intento.fecha|date:"d/m/Y H:i" }}</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p class="text-center text-muted mt-3">Aún no has jugado ningún juego.</p>
+      {% endif %}
+
+      <h4 class="mt-5 mb-3">Colección de Medallas</h4>
+      <div class="row g-3 mb-5">
+        {% for juego, datos in todas_medallas.items %}
+          {% with medallas|get_item:juego as medalla %}
+            <div class="col-sm-6 col-md-4 col-lg-3">
+              <div class="card text-center shadow-sm">
+                <div class="card-body">
+                  <h5 class="card-title">{{ juego }}</h5>
+                  {% if medalla %}
+                    <div style="font-size: 2rem;">{{ medalla }}</div>
+                    <p class="text-success mb-0">Obtenida</p>
+                  {% else %}
+                    <div style="font-size: 2rem; opacity: 0.3;">{{ datos.0 }}</div>
+                    <p class="text-muted mb-0">Pendiente (≥ {{ datos.1 }})</p>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endwith %}
+        {% endfor %}
+      </div>
+
+    {% endif %}
 
 </div>
 {% endblock %}

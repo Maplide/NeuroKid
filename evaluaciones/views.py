@@ -10,14 +10,28 @@ from django.contrib.auth.models import User
 from evaluaciones.utils.ia import predecir_diagnostico
 from django.http import JsonResponse
 from django.utils.dateparse import parse_date
+from .models import IntentoJuegoInvitado
+
+import uuid
 
 import datetime
+from datetime import date
+
+from django.db.models import Count, Avg
 
 import numpy as np
 
-from .models import Perfil, Nino, Especialista, Juego, IntentoJuego, Resultado, Evaluacion, ResultadoIA
+from .models import Perfil, Nino, Especialista, Juego, IntentoJuego, IntentoJuegoInvitado, Resultado, Evaluacion, ResultadoIA
 
 import json
+
+def todas_las_medallas():
+    return {
+        "EmoMatch": ("🥇 Oro", 80),
+        "Atención Turbo": ("🥈 Plata", 15),
+        "Mano Firme": ("🥉 Bronce", 10),
+        "Respira y Flota": ("🌟 Relax", 3),
+    }
 
 def index(request):
     return render(request, 'evaluaciones/index.html')
@@ -149,13 +163,40 @@ def logout_view(request):
     return redirect('index')
 
 def perfil_libre(request):
-    """
-    Vista exclusiva para usuarios invitados:
-    muestra el perfil con invitado=True sin pedir login.
-    """
+    # Generar ID de sesión si no existe
+    if "modo_libre_id" not in request.session:
+        request.session["modo_libre_id"] = str(uuid.uuid4())[:8]
+        print("🆕 Nuevo perfil libre asignado:", request.session["modo_libre_id"])
+
+    invitado_id = request.session["modo_libre_id"]
+
+    # Recuperar intentos del modo libre
+    intentos_por_juego = {}
+    intentos = IntentoJuegoInvitado.objects.filter(invitado_id=invitado_id).select_related('juego').order_by('-fecha')
+
+    for intento in intentos:
+        nombre_juego = intento.juego.nombre
+        if nombre_juego not in intentos_por_juego:
+            intentos_por_juego[nombre_juego] = []
+        intentos_por_juego[nombre_juego].append(intento)
+
+    # Calcular medallas por juego
+    medallas = {}
+    for juego, lista in intentos_por_juego.items():
+        mejor_puntaje = max(i.resultado for i in lista)
+        medalla = obtener_medalla(juego, mejor_puntaje)
+        if medalla:
+            medallas[juego] = medalla
+
+    # Renderizar con historial
     return render(request, 'evaluaciones/perfil.html', {
-        'nombre': 'Usuario Libre',
-        'invitado': True
+        'nombre': f'Invitado-{invitado_id}',
+        'modo_libre_id': invitado_id,
+        'invitado': True,
+        'intentos': intentos_por_juego,
+        'resultados_ia': {},  # no se usa en modo libre
+        'medallas': medallas,
+        'todas_medallas': todas_las_medallas()
     })
 
 @login_required
@@ -167,6 +208,7 @@ def perfil(request, nino_id=None):
         nino = Nino.objects.filter(user=request.user).first()
         intentos_por_juego = {}
         resultados_ia = {}
+        medallas = {}
 
         if nino:
             intentos = IntentoJuego.objects.filter(nino=nino).select_related('juego').order_by('-fecha')
@@ -178,28 +220,37 @@ def perfil(request, nino_id=None):
 
             # Obtener últimos resultados IA por juego
             for r in ResultadoIA.objects.filter(nino=nino).select_related('juego').order_by('juego', '-fecha'):
-                resultados_ia[r.juego.nombre] = r  # sobrescribe dejando el más reciente
+                resultados_ia[r.juego.nombre] = r
+
+            # Calcular medallas por juego
+            for juego, lista in intentos_por_juego.items():
+                mejor_puntaje = max(i.resultado for i in lista)
+                medalla = obtener_medalla(juego, mejor_puntaje)
+                if medalla:
+                    medallas[juego] = medalla
 
         return render(request, 'evaluaciones/perfil.html', {
             'nino': nino,
             'invitado': False,
             'intentos': intentos_por_juego,
-            'resultados_ia': resultados_ia
+            'resultados_ia': resultados_ia,
+            'medallas': medallas,
+            'todas_medallas': todas_las_medallas()
         })
 
-    # Vista personalizada para Especialista
+    # Vista para Especialista
     elif perfil and perfil.rol == 'especialista':
-        especialista = Especialista.objects.get(perfil=perfil)  # <-- Añade esta línea
+        especialista = Especialista.objects.get(perfil=perfil)
         resultados_globales = ResultadoIA.objects.select_related('nino', 'juego').order_by('-fecha')
         return render(request, 'evaluaciones/perfil.html', {
             'nombre': request.user.get_full_name() or request.user.username,
             'rol': 'especialista',
-            'especialista': especialista,  # <-- Y esta línea
+            'especialista': especialista,
             'resultados_globales': resultados_globales,
             'invitado': False
         })
 
-    # Otro tipo de usuario
+    # Otro usuario
     return render(request, 'evaluaciones/perfil.html', {
         'nombre': request.user.get_full_name() or request.user.username,
         'invitado': False
@@ -265,61 +316,103 @@ def preparar_vector_para_modelo(nombre_juego, datos_juego):
 
 @csrf_exempt
 def api_registrar_intento(request):
-    if request.method == "POST" and request.user.is_authenticated:
-        data = json.loads(request.body)
-        print("📥 Datos recibidos:", data)
-        print("👤 Usuario autenticado:", request.user.username)
+    if request.method != "POST":
+        return JsonResponse({"error": "Método no permitido"}, status=405)
 
+    data = json.loads(request.body)
+    juego_nombre = data.get("juego")
+    resultado = data.get("resultado", 0)
+
+    print("📥 Datos recibidos:", data)
+
+    try:
+        juego = Juego.objects.get(nombre=juego_nombre)
+    except Juego.DoesNotExist:
+        print("❌ Juego no encontrado:", juego_nombre)
+        return JsonResponse({"error": "Juego no encontrado"}, status=400)
+
+    # 🧠 IA: preparar datos
+    datos_vector = preparar_vector_para_modelo(juego.nombre, data)
+    prediccion, probabilidad = predecir_diagnostico(datos_vector)
+
+    # 🔐 Usuario autenticado (registrado)
+    if request.user.is_authenticated:
+        print("👤 Usuario autenticado:", request.user.username)
         try:
             nino = Nino.objects.get(user=request.user)
         except Nino.DoesNotExist:
-            print("❌ Niño no encontrado para el usuario.")
             return JsonResponse({"error": "Niño no encontrado"}, status=400)
 
-        try:
-            juego = Juego.objects.get(nombre=data.get("juego"))
-        except Juego.DoesNotExist:
-            print("❌ Juego no encontrado:", data.get("juego"))
-            return JsonResponse({"error": "Juego no encontrado"}, status=400)
-
-        # Guardar intento clásico
+        # Guardar intento
         IntentoJuego.objects.create(
             juego=juego,
             nino=nino,
-            resultado=data.get("resultado", 0)
+            resultado=resultado
         )
 
-        # IA
-        datos_vector = preparar_vector_para_modelo(juego.nombre, data)
-        prediccion, probabilidad = predecir_diagnostico(datos_vector)
-
-        # Guardar resultado IA (último por juego)
+        # Guardar resultado IA
         ResultadoIA.objects.update_or_create(
             nino=nino,
             juego=juego,
-            defaults={
-                "prediccion": prediccion,
-                "probabilidad": probabilidad
-            }
+            defaults={"prediccion": prediccion, "probabilidad": probabilidad}
         )
 
-        print(f"✅ Resultado IA guardado: {juego.nombre} = {prediccion} ({probabilidad:.2f})")
-        return JsonResponse({
-            "status": "ok",
-            "prediccion": prediccion,
-            "probabilidad": f"{probabilidad:.2f}"
-        })
+    # 🕹️ Usuario no autenticado → Modo libre
+    else:
+        invitado_id = request.session.get("modo_libre_id")
+        if not invitado_id:
+            print("🚫 Usuario sin sesión de modo libre.")
+            return JsonResponse({"error": "No autorizado"}, status=403)
 
-    print("🚫 Usuario no autenticado o método inválido.")
-    return JsonResponse({"error": "no autorizado"}, status=403)
+        print("👤 Usuario en modo libre:", invitado_id)
+        from .models import IntentoJuegoInvitado  # asegúrate que esté importado
+        IntentoJuegoInvitado.objects.create(
+            juego=juego,
+            invitado_id=invitado_id,
+            resultado=resultado
+        )
+
+    print(f"✅ Resultado IA generado: {prediccion} ({probabilidad:.2f})")
+    return JsonResponse({
+        "status": "ok",
+        "prediccion": prediccion,
+        "probabilidad": f"{probabilidad:.2f}"
+    })
 
 @login_required
 def dashboard_especialista(request):
     perfil = Perfil.objects.filter(user=request.user).first()
     if not perfil or perfil.rol != 'especialista':
-        return redirect('perfil')  # Solo especialistas pueden entrar
+        return redirect('perfil')
 
-    # Última predicción por niño y por juego
+    # --- 1. Totales ---
+    total_ninos = Nino.objects.count()
+    total_invitados = IntentoJuegoInvitado.objects.values('invitado_id').distinct().count()
+    total_partidas = IntentoJuego.objects.count() + IntentoJuegoInvitado.objects.count()
+
+    # --- 2. Juegos más jugados (registrados + invitados) ---
+    juegos = Juego.objects.filter(activo=True)
+    partidas_por_juego = []
+    for juego in juegos:
+        reg = IntentoJuego.objects.filter(juego=juego).count()
+        libre = IntentoJuegoInvitado.objects.filter(juego=juego).count()
+        total = reg + libre
+        partidas_por_juego.append({
+            'juego': juego.nombre,
+            'tipo': juego.get_tipo_display(),
+            'total': total
+        })
+
+    # Ordenar por más jugados
+    partidas_por_juego.sort(key=lambda x: x['total'], reverse=True)
+
+    # --- 3. Promedio de confianza IA por juego ---
+    confianza_ia = ResultadoIA.objects.values('juego__nombre').annotate(
+        promedio=Avg('probabilidad')
+    )
+    confianza_dict = {i['juego__nombre']: round(i['promedio'], 2) for i in confianza_ia}
+
+    # --- 4. Clasificación IA por niño (último resultado por juego) ---
     predicciones = ResultadoIA.objects.select_related('nino', 'juego') \
         .order_by('nino__id', 'juego__id', '-fecha')
 
@@ -327,20 +420,40 @@ def dashboard_especialista(request):
     for pred in predicciones:
         key = (pred.nino.id, pred.juego.id)
         if key not in resultados:
-            resultados[key] = pred  # Solo guardamos la más reciente
+            resultados[key] = pred  # Último resultado
 
-    # Agrupamos por categoría
-    resumen = {
-        "TEA": 0,
-        "TDAH": 0,
-        "Discapacidad Intelectual": 0,
-        "Ansiedad/Depresión": 0,
-    }
-    for p in resultados.values():
-        if p.prediccion in resumen:
-            resumen[p.prediccion] += 1
+    # --- 5. Filtro por edades ---
+    def calcular_edad(nacimiento):
+        hoy = date.today()
+        return hoy.year - nacimiento.year - ((hoy.month, hoy.day) < (nacimiento.month, nacimiento.day))
+
+    edades = {'4-6': 0, '7-9': 0, '10-11': 0}
+    for n in Nino.objects.all():
+        edad = calcular_edad(n.fecha_nacimiento)
+        if 4 <= edad <= 6:
+            edades['4-6'] += 1
+        elif 7 <= edad <= 9:
+            edades['7-9'] += 1
+        elif 10 <= edad <= 11:
+            edades['10-11'] += 1
 
     return render(request, 'evaluaciones/dashboard_especialista.html', {
-        'resumen': resumen,
-        'resultados': resultados.values()
+        'total_ninos': total_ninos,
+        'total_invitados': total_invitados,
+        'total_partidas': total_partidas,
+        'partidas_por_juego': partidas_por_juego,
+        'confianza_ia': confianza_dict,
+        'resultados': resultados.values(),
+        'edades': edades
     })
+
+def obtener_medalla(juego_nombre, puntaje):
+    if juego_nombre == "EmoMatch":
+        return "🥇 Oro" if puntaje >= 80 else None
+    elif juego_nombre == "Atención Turbo":
+        return "🥈 Plata" if puntaje >= 15 else None
+    elif juego_nombre == "Mano Firme":
+        return "🥉 Bronce" if puntaje >= 10 else None
+    elif juego_nombre == "Respira y Flota":
+        return "🌟 Relax" if puntaje >= 3 else None
+    return None
