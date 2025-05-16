@@ -30,4 +30,8 @@ urlpatterns = [
     path('api/registro_intento/',  views.api_registrar_intento,  name='api_registro_intento'),
 
     path('dashboard/', views.dashboard_especialista, name='dashboard_especialista'),
+
+    path('perfil/pdf/', views.perfil_nino_pdf, name='perfil_nino_pdf'),
+    path('perfil/pdf/<int:nino_id>/', views.perfil_nino_pdf_admin, name='perfil_nino_pdf_admin'),
+    path('dashboard/pdf_global/', views.reporte_global_pdf, name='reporte_global_pdf'),
 ]

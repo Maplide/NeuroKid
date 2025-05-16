@@ -2,6 +2,10 @@
 {% load static %}
 {% load form_extras %} {# o {% load extra_filters %} si creaste ese archivo #}
 
+{% block head %}
+  <link rel="stylesheet" href="{% static 'css/pages/perfil.css' %}">
+{% endblock %}
+
 {% block title %}Mi Perfil | NeuroKid{% endblock %}
 
 {% block content %}
@@ -79,6 +83,12 @@
       </div>
     </div>
 
+    <div class="text-center mb-4">
+      <a href="{% url 'perfil_nino_pdf' %}" target="_blank" class="btn btn-danger">
+        <i class="fas fa-file-pdf"></i> Descargar Informe PDF
+      </a>
+    </div>
+
     {# Resultados IA por juego #}
     {% if resultados_ia %}
       <h4 class="mb-3">Resultados de Evaluación IA</h4>
@@ -119,6 +129,21 @@
         {% endwith %}
       {% endfor %}
     </div>
+
+    {% if recomendaciones %}
+      <div class="card mt-4 shadow-sm">
+        <div class="card-header bg-warning text-dark">
+          <strong>📌 Recomendaciones Personalizadas</strong>
+        </div>
+        <div class="card-body">
+          <ul class="mb-0">
+            {% for rec in recomendaciones %}
+              <li>{{ rec }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    {% endif %}
 
     {# Historial de intentos #}
     {% if intentos %}
@@ -180,12 +205,42 @@
     </div>
 
     {% if resultados_globales %}
+
+      <form method="get" class="row g-3 align-items-end perfil-filtros">
+
+        <div class="col-md-4">
+          <label for="nombre" class="form-label">Buscar por nombre</label>
+          <input type="text" name="nombre" value="{{ filtro_nombre }}" class="form-control" placeholder="Ej: lucas123">
+        </div>
+
+        <div class="col-md-4">
+          <label for="juego" class="form-label">Filtrar por juego</label>
+          <input type="text" name="juego" value="{{ filtro_juego }}" class="form-control" placeholder="Ej: EmoMatch">
+        </div>
+
+        <div class="col-md-3">
+          <label for="fecha" class="form-label">Fecha exacta</label>
+          <input type="date" name="fecha" value="{{ filtro_fecha }}" class="form-control">
+        </div>
+
+        <div class="col-md-1 text-end mt-md-4 mt-2 d-flex gap-2">
+          <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+        </div>
+
+        <div class="col-md-12 text-end mt-2">
+          <a href="{% url 'perfil' %}" class="btn btn-outline-secondary btn-sm">
+            Limpiar filtros
+          </a>
+        </div>
+
+      </form>
+
       <div class="card mt-4 shadow-sm">
         <div class="card-header bg-primary text-white">
           <strong>Resultados IA - Todos los niños</strong>
         </div>
         <div class="card-body p-0">
-          <table class="table table-bordered table-sm mb-0">
+          <table class="table table-bordered table-sm perfil-tabla mb-0">
             <thead class="table-light">
               <tr>
                 <th>Niño</th>
@@ -209,6 +264,36 @@
               {% endfor %}
             </tbody>
           </table>
+        </div>
+        <!-- PAGINACIÓN -->
+        <div class="card-footer text-center">
+          <nav aria-label="Paginación">
+            <ul class="pagination justify-content-center perfil-paginacion mb-0">
+              {% if resultados_globales.has_previous %}
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ resultados_globales.previous_page_number }}">Anterior</a>
+                </li>
+              {% else %}
+                <li class="page-item disabled">
+                  <span class="page-link">Anterior</span>
+                </li>
+              {% endif %}
+
+              <li class="page-item disabled">
+                <span class="page-link">Página {{ resultados_globales.number }} de {{ resultados_globales.paginator.num_pages }}</span>
+              </li>
+
+              {% if resultados_globales.has_next %}
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ resultados_globales.next_page_number }}">Siguiente</a>
+                </li>
+              {% else %}
+                <li class="page-item disabled">
+                  <span class="page-link">Siguiente</span>
+                </li>
+              {% endif %}
+            </ul>
+          </nav>
         </div>
       </div>
     {% endif %}
@@ -280,6 +365,21 @@
           </div>
         </div>
       </div>
+
+      {% if recomendaciones %}
+        <div class="card mt-4 shadow-sm">
+          <div class="card-header bg-warning text-dark">
+            <strong>📌 Recomendaciones Personalizadas</strong>
+          </div>
+          <div class="card-body">
+            <ul class="mb-0">
+              {% for juego, mensaje in recomendaciones.items %}
+                <li><strong>{{ juego }}:</strong> {{ mensaje }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      {% endif %}
 
       {% if intentos %}
         <h4 class="mt-4 mb-3">Historial de Juegos</h4>

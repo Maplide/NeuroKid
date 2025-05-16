@@ -12,7 +12,16 @@ from django.http import JsonResponse
 from django.utils.dateparse import parse_date
 from .models import IntentoJuegoInvitado
 
+from django.template.loader import get_template
+from django.http import HttpResponse
+from weasyprint import HTML
+from datetime import date
+
+from django.core.paginator import Paginator
+
 import uuid
+
+from django.db.models import Avg, Q
 
 import datetime
 from datetime import date
@@ -163,40 +172,46 @@ def logout_view(request):
     return redirect('index')
 
 def perfil_libre(request):
-    # Generar ID de sesión si no existe
     if "modo_libre_id" not in request.session:
         request.session["modo_libre_id"] = str(uuid.uuid4())[:8]
-        print("🆕 Nuevo perfil libre asignado:", request.session["modo_libre_id"])
 
     invitado_id = request.session["modo_libre_id"]
 
-    # Recuperar intentos del modo libre
-    intentos_por_juego = {}
     intentos = IntentoJuegoInvitado.objects.filter(invitado_id=invitado_id).select_related('juego').order_by('-fecha')
 
-    for intento in intentos:
-        nombre_juego = intento.juego.nombre
-        if nombre_juego not in intentos_por_juego:
-            intentos_por_juego[nombre_juego] = []
-        intentos_por_juego[nombre_juego].append(intento)
-
-    # Calcular medallas por juego
+    intentos_por_juego = {}
     medallas = {}
+    recomendaciones = {}
+
+    for intento in intentos:
+        juego = intento.juego.nombre
+        if juego not in intentos_por_juego:
+            intentos_por_juego[juego] = []
+        intentos_por_juego[juego].append(intento)
+
+    # Calcular medallas y recomendaciones por juego
     for juego, lista in intentos_por_juego.items():
         mejor_puntaje = max(i.resultado for i in lista)
         medalla = obtener_medalla(juego, mejor_puntaje)
         if medalla:
             medallas[juego] = medalla
 
-    # Renderizar con historial
+        # Simular análisis IA basado solo en puntaje
+        if mejor_puntaje >= 9:
+            recomendaciones[juego] = "👍 Excelente desempeño. Puede avanzar a retos mayores."
+        elif mejor_puntaje >= 6:
+            recomendaciones[juego] = "🧐 Desempeño regular. Reforzar mediante práctica continua."
+        else:
+            recomendaciones[juego] = "⚠️ Desempeño bajo. Sugerimos repetir el juego con apoyo de un adulto."
+
     return render(request, 'evaluaciones/perfil.html', {
         'nombre': f'Invitado-{invitado_id}',
         'modo_libre_id': invitado_id,
         'invitado': True,
         'intentos': intentos_por_juego,
-        'resultados_ia': {},  # no se usa en modo libre
         'medallas': medallas,
-        'todas_medallas': todas_las_medallas()
+        'todas_medallas': todas_las_medallas(),
+        'recomendaciones': recomendaciones  # ✅ ahora por juego
     })
 
 @login_required
@@ -209,6 +224,7 @@ def perfil(request, nino_id=None):
         intentos_por_juego = {}
         resultados_ia = {}
         medallas = {}
+        recomendaciones = []
 
         if nino:
             intentos = IntentoJuego.objects.filter(nino=nino).select_related('juego').order_by('-fecha')
@@ -229,24 +245,97 @@ def perfil(request, nino_id=None):
                 if medalla:
                     medallas[juego] = medalla
 
+            print("RESULTADOS IA:", resultados_ia)
+
+            # ✅ Recomendaciones según predicciones reales
+            for r in resultados_ia.values():
+                juego = r.juego.nombre
+                pred = r.prediccion
+
+                if juego == "EmoMatch":
+                    if pred == "TEA":
+                        recomendaciones.append("🧩 Se identifican rasgos compatibles con TEA. Fomentar juegos que expresen emociones.")
+                    elif pred == "Ansiedad/Depresión":
+                        recomendaciones.append("😟 Posibles signos emocionales. Promover espacios de conversación y actividades de expresión.")
+                    elif pred == "Discapacidad Intelectual":
+                        recomendaciones.append("📚 Dificultad en reconocimiento emocional. Usar apoyos visuales simples.")
+                    elif pred == "TDAH":
+                        recomendaciones.append("🎯 Dificultades de enfoque en emociones. Combinar con dinámicas visuales y pausas activas.")
+
+                elif juego == "Atención Turbo":
+                    if pred == "TDAH":
+                        recomendaciones.append("⚡ Atención inestable. Implementar rutinas visuales y ejercicios de enfoque progresivo.")
+                    elif pred == "Discapacidad Intelectual":
+                        recomendaciones.append("🧠 Atención general limitada. Sugerimos adaptar tareas con apoyos visuales.")
+                    elif pred == "Ansiedad/Depresión":
+                        recomendaciones.append("😔 La atención podría verse afectada por el estado emocional. Promover ambientes tranquilos.")
+                    elif pred == "TEA":
+                        recomendaciones.append("🔁 Atención selectiva observada. Usar señales claras y estructuración de instrucciones.")
+
+                elif juego == "Mano Firme":
+                    if pred == "Discapacidad Intelectual":
+                        recomendaciones.append("🔧 Se sugiere reforzar motricidad fina. Usar actividades como recortes o modelado.")
+                    elif pred == "TDAH":
+                        recomendaciones.append("✋ Inestabilidad motora por impulsividad. Probar con trazados guiados y pausas.")
+                    elif pred == "TEA":
+                        recomendaciones.append("🖍️ Puede presentar rigidez en el trazo. Sugerimos usar herramientas sensoriales.")
+                    elif pred == "Ansiedad/Depresión":
+                        recomendaciones.append("📐 Motricidad afectada por estado anímico. Actividades suaves como pintar o plastilina.")
+
+                elif juego == "Respira y Flota":
+                    if pred == "Ansiedad/Depresión":
+                        recomendaciones.append("🌬️ Señales de tensión emocional. Practicar respiración guiada y relajación diaria.")
+                    elif pred == "TEA":
+                        recomendaciones.append("🧘 Dificultades para seguir ritmo. Reforzar rutinas con apoyo visual y auditivo.")
+                    elif pred == "TDAH":
+                        recomendaciones.append("🌀 Respiración agitada. Usar juegos de control respiratorio con tiempo y metas.")
+                    elif pred == "Discapacidad Intelectual":
+                        recomendaciones.append("📉 Limitaciones en autorregulación. Incluir actividades de relajación con apoyo externo.")
+
         return render(request, 'evaluaciones/perfil.html', {
             'nino': nino,
             'invitado': False,
             'intentos': intentos_por_juego,
             'resultados_ia': resultados_ia,
             'medallas': medallas,
-            'todas_medallas': todas_las_medallas()
+            'todas_medallas': todas_las_medallas(),
+            'recomendaciones': recomendaciones
         })
 
     # Vista para Especialista
     elif perfil and perfil.rol == 'especialista':
         especialista = Especialista.objects.get(perfil=perfil)
-        resultados_globales = ResultadoIA.objects.select_related('nino', 'juego').order_by('-fecha')
+        
+        filtro_nombre = request.GET.get('nombre', '')
+        filtro_juego = request.GET.get('juego', '')
+        filtro_fecha = request.GET.get('fecha', '')
+
+        resultados = ResultadoIA.objects.select_related('nino', 'juego')
+
+        # Aplicar filtros
+        if filtro_nombre:
+            resultados = resultados.filter(nino__user__username__icontains=filtro_nombre)
+
+        if filtro_juego:
+            resultados = resultados.filter(juego__nombre__icontains=filtro_juego)
+
+        if filtro_fecha:
+            resultados = resultados.filter(fecha__date=filtro_fecha)
+
+        # Ordenar y paginar
+        resultados = resultados.order_by('-fecha')
+        paginator = Paginator(resultados, 20)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
         return render(request, 'evaluaciones/perfil.html', {
             'nombre': request.user.get_full_name() or request.user.username,
             'rol': 'especialista',
             'especialista': especialista,
-            'resultados_globales': resultados_globales,
+            'filtro_nombre': filtro_nombre,
+            'filtro_juego': filtro_juego,
+            'filtro_fecha': filtro_fecha,
+            'resultados_globales': page_obj,
             'invitado': False
         })
 
@@ -255,6 +344,241 @@ def perfil(request, nino_id=None):
         'nombre': request.user.get_full_name() or request.user.username,
         'invitado': False
     })
+
+@login_required
+def perfil_nino_pdf(request):
+    perfil = Perfil.objects.filter(user=request.user).first()
+    if not perfil or perfil.rol != 'nino':
+        return redirect('perfil')
+
+    nino = Nino.objects.filter(user=request.user).first()
+    intentos = IntentoJuego.objects.filter(nino=nino).select_related('juego')
+    resultados_ia = ResultadoIA.objects.filter(nino=nino).select_related('juego')
+
+    # Agrupar intentos por juego
+    intentos_por_juego = {}
+    for intento in intentos:
+        nombre_juego = intento.juego.nombre
+        if nombre_juego not in intentos_por_juego:
+            intentos_por_juego[nombre_juego] = []
+        intentos_por_juego[nombre_juego].append(intento)
+
+    # Obtener medallas
+    def obtener_medalla(juego_nombre, puntaje):
+        if juego_nombre == "EmoMatch":
+            return "🥇 Oro" if puntaje >= 80 else None
+        elif juego_nombre == "Atención Turbo":
+            return "🥈 Plata" if puntaje >= 15 else None
+        elif juego_nombre == "Mano Firme":
+            return "🥉 Bronce" if puntaje >= 10 else None
+        elif juego_nombre == "Respira y Flota":
+            return "🌟 Relax" if puntaje >= 3 else None
+        return None
+
+    medallas = {}
+    for juego, lista in intentos_por_juego.items():
+        mejor = max(i.resultado for i in lista)
+        medalla = obtener_medalla(juego, mejor)
+        if medalla:
+            medallas[juego] = medalla
+
+    # Recomendaciones personalizadas (simples por ahora)
+    recomendaciones = []
+
+    for r in resultados_ia:
+        juego = r.juego.nombre
+        pred = r.prediccion
+
+        if juego == "EmoMatch":
+            if pred == "Desarrollo típico":
+                recomendaciones.append("👍 En EmoMatch se evidencia buena identificación emocional. Reforzar juegos sociales.")
+            elif pred == "En observación":
+                recomendaciones.append("🧐 En EmoMatch hay dudas en reconocimiento de emociones. Reforzar con fotos familiares o emojis.")
+            elif pred == "Requiere atención":
+                recomendaciones.append("⚠️ En EmoMatch se recomienda evaluar posible TEA. Buscar apoyo emocional y trabajar expresiones básicas.")
+
+        elif juego == "Atención Turbo":
+            if pred == "Desarrollo típico":
+                recomendaciones.append("🚀 Atención buena en Turbo. Se recomienda avanzar a tareas más rápidas.")
+            elif pred == "En observación":
+                recomendaciones.append("⏱️ Atención fluctuante. Se sugiere trabajar con ejercicios de enfoque y pausas activas.")
+            elif pred == "Requiere atención":
+                recomendaciones.append("🔔 Baja atención sostenida. Considerar evaluación por TDAH y reforzar rutinas estructuradas.")
+
+        elif juego == "Mano Firme":
+            if pred == "Desarrollo típico":
+                recomendaciones.append("✋ Coordinación motora adecuada. Puede practicar dibujo o juegos de precisión.")
+            elif pred == "En observación":
+                recomendaciones.append("📐 Leve inestabilidad en motricidad fina. Reforzar con actividades de trazado o plastilina.")
+            elif pred == "Requiere atención":
+                recomendaciones.append("🔧 Dificultad motora evidente. Recomendable consultar a terapeuta ocupacional.")
+
+        elif juego == "Respira y Flota":
+            if pred == "Desarrollo típico":
+                recomendaciones.append("🧘 Buen control respiratorio. Útil para autorregulación emocional.")
+            elif pred == "En observación":
+                recomendaciones.append("🌬️ Dificultad leve para seguir patrones. Practicar respiraciones guiadas.")
+            elif pred == "Requiere atención":
+                recomendaciones.append("😮‍💨 Indicios de ansiedad o tensión. Se sugiere incluir rutinas de relajación diaria.")
+
+    template = get_template('evaluaciones/pdf_perfil_nino.html')
+    html_string = template.render({
+        'nino': nino,
+        'intentos': intentos_por_juego,
+        'resultados_ia': resultados_ia,
+        'medallas': medallas,
+        'recomendaciones': recomendaciones,
+        'fecha': date.today()
+    })
+
+    html = HTML(string=html_string, base_url=request.build_absolute_uri())
+    pdf = html.write_pdf()
+
+    response = HttpResponse(pdf, content_type='application/pdf')
+    response['Content-Disposition'] = 'inline; filename="perfil_niño.pdf"'
+    return response
+
+@login_required
+def perfil_nino_pdf_admin(request, nino_id):
+    perfil = Perfil.objects.filter(user=request.user).first()
+    if not perfil or perfil.rol != 'especialista':
+        return redirect('perfil')
+
+    try:
+        nino = Nino.objects.get(id=nino_id)
+    except Nino.DoesNotExist:
+        return HttpResponse("Niño no encontrado.", status=404)
+
+    intentos = IntentoJuego.objects.filter(nino=nino).select_related('juego')
+    resultados_ia = ResultadoIA.objects.filter(nino=nino).select_related('juego')
+
+    # Agrupar intentos por juego
+    intentos_por_juego = {}
+    for intento in intentos:
+        nombre_juego = intento.juego.nombre
+        if nombre_juego not in intentos_por_juego:
+            intentos_por_juego[nombre_juego] = []
+        intentos_por_juego[nombre_juego].append(intento)
+
+    # Medallas
+    def obtener_medalla(juego_nombre, puntaje):
+        if juego_nombre == "EmoMatch":
+            return "🥇 Oro" if puntaje >= 80 else None
+        elif juego_nombre == "Atención Turbo":
+            return "🥈 Plata" if puntaje >= 15 else None
+        elif juego_nombre == "Mano Firme":
+            return "🥉 Bronce" if puntaje >= 10 else None
+        elif juego_nombre == "Respira y Flota":
+            return "🌟 Relax" if puntaje >= 3 else None
+        return None
+
+    medallas = {}
+    for juego, lista in intentos_por_juego.items():
+        mejor = max(i.resultado for i in lista)
+        medalla = obtener_medalla(juego, mejor)
+        if medalla:
+            medallas[juego] = medalla
+
+    # Recomendaciones
+    recomendaciones = []
+
+    for r in resultados_ia:
+        juego = r.juego.nombre
+        pred = r.prediccion
+
+        if juego == "EmoMatch":
+            if pred == "Desarrollo típico":
+                recomendaciones.append("👍 En EmoMatch se evidencia buena identificación emocional. Reforzar juegos sociales.")
+            elif pred == "En observación":
+                recomendaciones.append("🧐 En EmoMatch hay dudas en reconocimiento de emociones. Reforzar con fotos familiares o emojis.")
+            elif pred == "Requiere atención":
+                recomendaciones.append("⚠️ En EmoMatch se recomienda evaluar posible TEA. Buscar apoyo emocional y trabajar expresiones básicas.")
+
+        elif juego == "Atención Turbo":
+            if pred == "Desarrollo típico":
+                recomendaciones.append("🚀 Atención buena en Turbo. Se recomienda avanzar a tareas más rápidas.")
+            elif pred == "En observación":
+                recomendaciones.append("⏱️ Atención fluctuante. Se sugiere trabajar con ejercicios de enfoque y pausas activas.")
+            elif pred == "Requiere atención":
+                recomendaciones.append("🔔 Baja atención sostenida. Considerar evaluación por TDAH y reforzar rutinas estructuradas.")
+
+        elif juego == "Mano Firme":
+            if pred == "Desarrollo típico":
+                recomendaciones.append("✋ Coordinación motora adecuada. Puede practicar dibujo o juegos de precisión.")
+            elif pred == "En observación":
+                recomendaciones.append("📐 Leve inestabilidad en motricidad fina. Reforzar con actividades de trazado o plastilina.")
+            elif pred == "Requiere atención":
+                recomendaciones.append("🔧 Dificultad motora evidente. Recomendable consultar a terapeuta ocupacional.")
+
+        elif juego == "Respira y Flota":
+            if pred == "Desarrollo típico":
+                recomendaciones.append("🧘 Buen control respiratorio. Útil para autorregulación emocional.")
+            elif pred == "En observación":
+                recomendaciones.append("🌬️ Dificultad leve para seguir patrones. Practicar respiraciones guiadas.")
+            elif pred == "Requiere atención":
+                recomendaciones.append("😮‍💨 Indicios de ansiedad o tensión. Se sugiere incluir rutinas de relajación diaria.")
+
+    # Renderizar
+    template = get_template('evaluaciones/pdf_perfil_nino.html')
+    html_string = template.render({
+        'nino': nino,
+        'intentos': intentos_por_juego,
+        'resultados_ia': resultados_ia,
+        'medallas': medallas,
+        'recomendaciones': recomendaciones,
+        'fecha': date.today()
+    })
+
+    html = HTML(string=html_string, base_url=request.build_absolute_uri())
+    pdf = html.write_pdf()
+
+    response = HttpResponse(pdf, content_type='application/pdf')
+    response['Content-Disposition'] = f'inline; filename="{nino.user.username}_perfil.pdf"'
+    return response
+
+@login_required
+def reporte_global_pdf(request):
+    perfil = Perfil.objects.filter(user=request.user).first()
+    if not perfil or perfil.rol != 'especialista':
+        return redirect('perfil')
+
+    total_ninos = Nino.objects.count()
+    total_invitados = IntentoJuegoInvitado.objects.values('invitado_id').distinct().count()
+    total_partidas = IntentoJuego.objects.count() + IntentoJuegoInvitado.objects.count()
+
+    resumen_juegos = Juego.objects.annotate(
+        total_partidas=Count('intentojuego') + Count('intentojuegoinvitado')
+    ).values('nombre', 'total_partidas')
+
+    confianza_ia = ResultadoIA.objects.values('juego__nombre').annotate(
+        promedio=Avg('probabilidad')
+    )
+    confianza_dict = {i['juego__nombre']: round(i['promedio'], 2) for i in confianza_ia}
+
+    resultados = ResultadoIA.objects.select_related('nino', 'juego') \
+                    .order_by('nino__id', 'juego__id', '-fecha')
+
+    ultimos = {}
+    for r in resultados:
+        key = (r.nino.id, r.juego.id)
+        if key not in ultimos:
+            ultimos[key] = r
+
+    template = get_template('evaluaciones/pdf_reporte_global.html')
+    html_string = template.render({
+        'total_ninos': total_ninos,
+        'total_invitados': total_invitados,
+        'total_partidas': total_partidas,
+        'resumen_juegos': resumen_juegos,
+        'confianza_ia': confianza_dict,
+        'resultados': ultimos.values(),
+        'fecha': date.today()
+    })
+
+    pdf = HTML(string=html_string, base_url=request.build_absolute_uri()).write_pdf()
+    response = HttpResponse(pdf, content_type='application/pdf')
+    response['Content-Disposition'] = 'inline; filename="reporte_global.pdf"'
+    return response
 
 def nosotros(request):
     return render(request, 'evaluaciones/nosotros.html')
@@ -390,7 +714,7 @@ def dashboard_especialista(request):
     total_invitados = IntentoJuegoInvitado.objects.values('invitado_id').distinct().count()
     total_partidas = IntentoJuego.objects.count() + IntentoJuegoInvitado.objects.count()
 
-    # --- 2. Juegos más jugados (registrados + invitados) ---
+    # --- 2. Juegos más jugados ---
     juegos = Juego.objects.filter(activo=True)
     partidas_por_juego = []
     for juego in juegos:
@@ -402,8 +726,6 @@ def dashboard_especialista(request):
             'tipo': juego.get_tipo_display(),
             'total': total
         })
-
-    # Ordenar por más jugados
     partidas_por_juego.sort(key=lambda x: x['total'], reverse=True)
 
     # --- 3. Promedio de confianza IA por juego ---
@@ -412,17 +734,30 @@ def dashboard_especialista(request):
     )
     confianza_dict = {i['juego__nombre']: round(i['promedio'], 2) for i in confianza_ia}
 
-    # --- 4. Clasificación IA por niño (último resultado por juego) ---
-    predicciones = ResultadoIA.objects.select_related('nino', 'juego') \
-        .order_by('nino__id', 'juego__id', '-fecha')
+    # --- 4. Filtros en resultados IA ---
+    filtro_nombre = request.GET.get('nombre', '')
+    filtro_juego = request.GET.get('juego', '')
+    filtro_fecha = request.GET.get('fecha', '')
 
-    resultados = {}
-    for pred in predicciones:
-        key = (pred.nino.id, pred.juego.id)
-        if key not in resultados:
-            resultados[key] = pred  # Último resultado
+    resultados_query = ResultadoIA.objects.select_related('nino', 'juego')
 
-    # --- 5. Filtro por edades ---
+    if filtro_nombre:
+        resultados_query = resultados_query.filter(nino__user__username__icontains=filtro_nombre)
+
+    if filtro_juego:
+        resultados_query = resultados_query.filter(juego__nombre__icontains=filtro_juego)
+
+    if filtro_fecha:
+        resultados_query = resultados_query.filter(fecha__date=filtro_fecha)
+
+    resultados_query = resultados_query.order_by('-fecha')
+
+    # --- Paginación ---
+    paginator = Paginator(resultados_query, 20)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    # --- 5. Clasificación por edad ---
     def calcular_edad(nacimiento):
         hoy = date.today()
         return hoy.year - nacimiento.year - ((hoy.month, hoy.day) < (nacimiento.month, nacimiento.day))
@@ -443,8 +778,13 @@ def dashboard_especialista(request):
         'total_partidas': total_partidas,
         'partidas_por_juego': partidas_por_juego,
         'confianza_ia': confianza_dict,
-        'resultados': resultados.values(),
-        'edades': edades
+        'edades': edades,
+        'resultados': page_obj,  # 👈 con paginación
+
+        # 👇 filtros para el formulario
+        'filtro_nombre': filtro_nombre,
+        'filtro_juego': filtro_juego,
+        'filtro_fecha': filtro_fecha
     })
 
 def obtener_medalla(juego_nombre, puntaje):

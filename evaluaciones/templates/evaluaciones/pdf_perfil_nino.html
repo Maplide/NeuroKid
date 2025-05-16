@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Perfil del Niño - NeuroKid</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+      padding: 30px;
+      color: #333;
+    }
+
+    h1, h2 {
+      color: #007ACC;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .subtitulo {
+      font-size: 14px;
+      text-align: center;
+      color: #666;
+      margin-bottom: 30px;
+    }
+
+    .section {
+      margin-bottom: 25px;
+    }
+
+    .info-box {
+      background-color: #f0f8ff;
+      border: 1px solid #007ACC;
+      padding: 15px;
+      border-radius: 5px;
+    }
+
+    .info-box p {
+      margin: 5px 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 6px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #e6f2ff;
+      font-weight: bold;
+    }
+
+    .medalla {
+      font-size: 1.5rem;
+    }
+
+    .recomendacion {
+      background-color: #fff8e1;
+      border-left: 4px solid #ffc107;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 3px;
+    }
+
+    .footer {
+      text-align: center;
+      font-size: 11px;
+      color: #999;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Informe de Evaluación</h1>
+  <p class="subtitulo">Sistema NeuroKid – {{ fecha|date:"d/m/Y" }}</p>
+
+  <!-- Información del Niño -->
+  <div class="section info-box">
+    <h2>👦 Datos del Niño</h2>
+    <p><strong>Nombre:</strong> {{ nino.user.get_full_name|default:nino.user.username }}</p>
+    <p><strong>Fecha de nacimiento:</strong> {{ nino.fecha_nacimiento }}</p>
+    <p><strong>Género:</strong> {{ nino.get_genero_display }}</p>
+    <p><strong>Email:</strong> {{ nino.email }}</p>
+  </div>
+
+  <!-- Resultados IA -->
+  {% if resultados_ia %}
+  <div class="section">
+    <h2>🧠 Resultados de Evaluación IA</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Juego</th>
+          <th>Predicción</th>
+          <th>Confianza (%)</th>
+          <th>Fecha</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in resultados_ia %}
+        <tr>
+          <td>{{ r.juego.nombre }}</td>
+          <td>{{ r.prediccion }}</td>
+          <td>{{ r.probabilidad|floatformat:2 }}</td>
+          <td>{{ r.fecha|date:"d/m/Y H:i" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+
+  <!-- Medallas -->
+  {% if medallas %}
+  <div class="section">
+    <h2>🏅 Medallas Obtenidas</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Juego</th>
+          <th>Medalla</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for juego, medalla in medallas.items %}
+        <tr>
+          <td>{{ juego }}</td>
+          <td class="medalla">{{ medalla }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+
+  <!-- Historial de Intentos -->
+  {% if intentos %}
+  <div class="section">
+    <h2>📊 Historial de Juegos</h2>
+    {% for juego, lista in intentos.items %}
+    <h4>{{ juego }}</h4>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Resultado</th>
+          <th>Fecha</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for intento in lista %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>{{ intento.resultado }}</td>
+          <td>{{ intento.fecha|date:"d/m/Y H:i" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Recomendaciones -->
+  {% if recomendaciones %}
+  <div class="section">
+    <h2>📌 Recomendaciones Personalizadas</h2>
+    {% for rec in recomendaciones %}
+    <div class="recomendacion">
+      {{ rec }}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <div class="footer">
+    Sistema de evaluación NeuroKid &copy; {{ fecha|date:"Y" }}
+  </div>
+
+</body>
+</html>

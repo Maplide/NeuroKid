@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Reporte Global – NeuroKid</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+      color: #333;
+      padding: 30px;
+    }
+
+    h1, h2 {
+      color: #007ACC;
+      text-align: center;
+      margin-bottom: 5px;
+    }
+
+    .subtitulo {
+      text-align: center;
+      color: #555;
+      font-size: 13px;
+      margin-bottom: 30px;
+    }
+
+    .info-box {
+      background-color: #f0f8ff;
+      border: 1px solid #007ACC;
+      padding: 15px;
+      margin-bottom: 25px;
+      border-radius: 5px;
+    }
+
+    .info-box p {
+      margin: 5px 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+      margin-bottom: 30px;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 6px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #e6f2ff;
+    }
+
+    .footer {
+      text-align: center;
+      font-size: 11px;
+      color: #999;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Reporte Global de Evaluación IA</h1>
+  <p class="subtitulo">Fecha: {{ fecha|date:"d/m/Y" }}</p>
+
+  <!-- Resumen general -->
+  <div class="info-box">
+    <p><strong>👦 Total de niños registrados:</strong> {{ total_ninos }}</p>
+    <p><strong>🧑‍🚀 Sesiones en modo libre:</strong> {{ total_invitados }}</p>
+    <p><strong>🎮 Partidas totales:</strong> {{ total_partidas }}</p>
+  </div>
+
+  <!-- Resumen por juego -->
+  <h2>📊 Juegos más Jugados</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Juego</th>
+        <th>Partidas totales</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for j in resumen_juegos %}
+      <tr>
+        <td>{{ j.nombre }}</td>
+        <td>{{ j.total_partidas }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- Confianza promedio -->
+  <h2>🧠 Promedio de Confianza IA por Juego</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Juego</th>
+        <th>Confianza promedio (%)</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for juego, valor in confianza_ia.items %}
+      <tr>
+        <td>{{ juego }}</td>
+        <td>{{ valor }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- Tabla con últimos resultados IA -->
+  <h2>📋 Últimos Resultados IA por Niño</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Niño</th>
+        <th>Juego</th>
+        <th>Predicción</th>
+        <th>Confianza</th>
+        <th>Fecha</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in resultados %}
+      <tr>
+        <td>{{ r.nino.user.username }}</td>
+        <td>{{ r.juego.nombre }}</td>
+        <td>{{ r.prediccion }}</td>
+        <td>{{ r.probabilidad|floatformat:2 }}</td>
+        <td>{{ r.fecha|date:"d/m/Y H:i" }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="footer">
+    Informe generado por el sistema NeuroKid &copy; {{ fecha|date:"Y" }}
+  </div>
+
+</body>
+</html>

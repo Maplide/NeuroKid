@@ -24,4 +24,47 @@
 .game-info p  {
   color: var(--text-light);
 }
-  
+
+/* Filtros en el perfil del especialista */
+form.row.g-3 {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+/* Inputs y botones */
+form input,
+form select {
+  font-size: 14px;
+}
+
+/* Paginación */
+.pagination .page-link {
+  color: #8000ff;
+  font-weight: bold;
+}
+
+.pagination .page-link:hover {
+  background-color: #e6f2ff;
+}
+
+.pagination .disabled .page-link {
+  color: #999;
+  pointer-events: none;
+  background-color: #f8f9fa;
+}
+
+/* Estilo extra si usas tablas grandes */
+.table-sm td, .table-sm th {
+  font-size: 13px;
+}
+
+.perfil-filtros .form-label {
+  font-weight: 600;
+}
+
+.perfil-filtros .btn {
+  min-width: 100px;
+}
