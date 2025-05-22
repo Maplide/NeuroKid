@@ -1,3 +1,6 @@
+from django.core.mail import EmailMessage
+from .models import LogEnvioReporte
+
 # evaluaciones/views.py
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
@@ -390,36 +393,45 @@ def perfil_nino_pdf(request):
         pred = r.prediccion
 
         if juego == "EmoMatch":
-            if pred == "Desarrollo típico":
-                recomendaciones.append("👍 En EmoMatch se evidencia buena identificación emocional. Reforzar juegos sociales.")
-            elif pred == "En observación":
-                recomendaciones.append("🧐 En EmoMatch hay dudas en reconocimiento de emociones. Reforzar con fotos familiares o emojis.")
-            elif pred == "Requiere atención":
-                recomendaciones.append("⚠️ En EmoMatch se recomienda evaluar posible TEA. Buscar apoyo emocional y trabajar expresiones básicas.")
+            if pred == "TEA":
+                recomendaciones.append("🧩 Se identifican rasgos compatibles con TEA. Fomentar juegos que expresen emociones.")
+            elif pred == "Ansiedad/Depresión":
+                recomendaciones.append("😟 Posibles signos emocionales. Promover espacios de conversación y actividades de expresión.")
+            elif pred == "Discapacidad Intelectual":
+                recomendaciones.append("📚 Dificultad en reconocimiento emocional. Usar apoyos visuales simples.")
+            elif pred == "TDAH":
+                recomendaciones.append("🎯 Dificultades de enfoque en emociones. Combinar con dinámicas visuales y pausas activas.")
 
         elif juego == "Atención Turbo":
-            if pred == "Desarrollo típico":
-                recomendaciones.append("🚀 Atención buena en Turbo. Se recomienda avanzar a tareas más rápidas.")
-            elif pred == "En observación":
-                recomendaciones.append("⏱️ Atención fluctuante. Se sugiere trabajar con ejercicios de enfoque y pausas activas.")
-            elif pred == "Requiere atención":
-                recomendaciones.append("🔔 Baja atención sostenida. Considerar evaluación por TDAH y reforzar rutinas estructuradas.")
+            if pred == "TDAH":
+                recomendaciones.append("⚡ Atención inestable. Implementar rutinas visuales y ejercicios de enfoque progresivo.")
+            elif pred == "Discapacidad Intelectual":
+                recomendaciones.append("🧠 Atención general limitada. Sugerimos adaptar tareas con apoyos visuales.")
+            elif pred == "Ansiedad/Depresión":
+                recomendaciones.append("😔 La atención podría verse afectada por el estado emocional. Promover ambientes tranquilos.")
+            elif pred == "TEA":
+                recomendaciones.append("🔁 Atención selectiva observada. Usar señales claras y estructuración de instrucciones.")
 
         elif juego == "Mano Firme":
-            if pred == "Desarrollo típico":
-                recomendaciones.append("✋ Coordinación motora adecuada. Puede practicar dibujo o juegos de precisión.")
-            elif pred == "En observación":
-                recomendaciones.append("📐 Leve inestabilidad en motricidad fina. Reforzar con actividades de trazado o plastilina.")
-            elif pred == "Requiere atención":
-                recomendaciones.append("🔧 Dificultad motora evidente. Recomendable consultar a terapeuta ocupacional.")
+            if pred == "Discapacidad Intelectual":
+                recomendaciones.append("🔧 Se sugiere reforzar motricidad fina. Usar actividades como recortes o modelado.")
+            elif pred == "TDAH":
+                recomendaciones.append("✋ Inestabilidad motora por impulsividad. Probar con trazados guiados y pausas.")
+            elif pred == "TEA":
+                recomendaciones.append("🖍️ Puede presentar rigidez en el trazo. Sugerimos usar herramientas sensoriales.")
+            elif pred == "Ansiedad/Depresión":
+                recomendaciones.append("📐 Motricidad afectada por estado anímico. Actividades suaves como pintar o plastilina.")
 
         elif juego == "Respira y Flota":
-            if pred == "Desarrollo típico":
-                recomendaciones.append("🧘 Buen control respiratorio. Útil para autorregulación emocional.")
-            elif pred == "En observación":
-                recomendaciones.append("🌬️ Dificultad leve para seguir patrones. Practicar respiraciones guiadas.")
-            elif pred == "Requiere atención":
-                recomendaciones.append("😮‍💨 Indicios de ansiedad o tensión. Se sugiere incluir rutinas de relajación diaria.")
+            if pred == "Ansiedad/Depresión":
+                recomendaciones.append("🌬️ Señales de tensión emocional. Practicar respiración guiada y relajación diaria.")
+            elif pred == "TEA":
+                recomendaciones.append("🧘 Dificultades para seguir ritmo. Reforzar rutinas con apoyo visual y auditivo.")
+            elif pred == "TDAH":
+                recomendaciones.append("🌀 Respiración agitada. Usar juegos de control respiratorio con tiempo y metas.")
+            elif pred == "Discapacidad Intelectual":
+                recomendaciones.append("📉 Limitaciones en autorregulación. Incluir actividades de relajación con apoyo externo.")
+
 
     template = get_template('evaluaciones/pdf_perfil_nino.html')
     html_string = template.render({
@@ -487,36 +499,45 @@ def perfil_nino_pdf_admin(request, nino_id):
         pred = r.prediccion
 
         if juego == "EmoMatch":
-            if pred == "Desarrollo típico":
-                recomendaciones.append("👍 En EmoMatch se evidencia buena identificación emocional. Reforzar juegos sociales.")
-            elif pred == "En observación":
-                recomendaciones.append("🧐 En EmoMatch hay dudas en reconocimiento de emociones. Reforzar con fotos familiares o emojis.")
-            elif pred == "Requiere atención":
-                recomendaciones.append("⚠️ En EmoMatch se recomienda evaluar posible TEA. Buscar apoyo emocional y trabajar expresiones básicas.")
+            if pred == "TEA":
+                recomendaciones.append("🧩 Se identifican rasgos compatibles con TEA. Fomentar juegos que expresen emociones.")
+            elif pred == "Ansiedad/Depresión":
+                recomendaciones.append("😟 Posibles signos emocionales. Promover espacios de conversación y actividades de expresión.")
+            elif pred == "Discapacidad Intelectual":
+                recomendaciones.append("📚 Dificultad en reconocimiento emocional. Usar apoyos visuales simples.")
+            elif pred == "TDAH":
+                recomendaciones.append("🎯 Dificultades de enfoque en emociones. Combinar con dinámicas visuales y pausas activas.")
 
         elif juego == "Atención Turbo":
-            if pred == "Desarrollo típico":
-                recomendaciones.append("🚀 Atención buena en Turbo. Se recomienda avanzar a tareas más rápidas.")
-            elif pred == "En observación":
-                recomendaciones.append("⏱️ Atención fluctuante. Se sugiere trabajar con ejercicios de enfoque y pausas activas.")
-            elif pred == "Requiere atención":
-                recomendaciones.append("🔔 Baja atención sostenida. Considerar evaluación por TDAH y reforzar rutinas estructuradas.")
+            if pred == "TDAH":
+                recomendaciones.append("⚡ Atención inestable. Implementar rutinas visuales y ejercicios de enfoque progresivo.")
+            elif pred == "Discapacidad Intelectual":
+                recomendaciones.append("🧠 Atención general limitada. Sugerimos adaptar tareas con apoyos visuales.")
+            elif pred == "Ansiedad/Depresión":
+                recomendaciones.append("😔 La atención podría verse afectada por el estado emocional. Promover ambientes tranquilos.")
+            elif pred == "TEA":
+                recomendaciones.append("🔁 Atención selectiva observada. Usar señales claras y estructuración de instrucciones.")
 
         elif juego == "Mano Firme":
-            if pred == "Desarrollo típico":
-                recomendaciones.append("✋ Coordinación motora adecuada. Puede practicar dibujo o juegos de precisión.")
-            elif pred == "En observación":
-                recomendaciones.append("📐 Leve inestabilidad en motricidad fina. Reforzar con actividades de trazado o plastilina.")
-            elif pred == "Requiere atención":
-                recomendaciones.append("🔧 Dificultad motora evidente. Recomendable consultar a terapeuta ocupacional.")
+            if pred == "Discapacidad Intelectual":
+                recomendaciones.append("🔧 Se sugiere reforzar motricidad fina. Usar actividades como recortes o modelado.")
+            elif pred == "TDAH":
+                recomendaciones.append("✋ Inestabilidad motora por impulsividad. Probar con trazados guiados y pausas.")
+            elif pred == "TEA":
+                recomendaciones.append("🖍️ Puede presentar rigidez en el trazo. Sugerimos usar herramientas sensoriales.")
+            elif pred == "Ansiedad/Depresión":
+                recomendaciones.append("📐 Motricidad afectada por estado anímico. Actividades suaves como pintar o plastilina.")
 
         elif juego == "Respira y Flota":
-            if pred == "Desarrollo típico":
-                recomendaciones.append("🧘 Buen control respiratorio. Útil para autorregulación emocional.")
-            elif pred == "En observación":
-                recomendaciones.append("🌬️ Dificultad leve para seguir patrones. Practicar respiraciones guiadas.")
-            elif pred == "Requiere atención":
-                recomendaciones.append("😮‍💨 Indicios de ansiedad o tensión. Se sugiere incluir rutinas de relajación diaria.")
+            if pred == "Ansiedad/Depresión":
+                recomendaciones.append("🌬️ Señales de tensión emocional. Practicar respiración guiada y relajación diaria.")
+            elif pred == "TEA":
+                recomendaciones.append("🧘 Dificultades para seguir ritmo. Reforzar rutinas con apoyo visual y auditivo.")
+            elif pred == "TDAH":
+                recomendaciones.append("🌀 Respiración agitada. Usar juegos de control respiratorio con tiempo y metas.")
+            elif pred == "Discapacidad Intelectual":
+                recomendaciones.append("📉 Limitaciones en autorregulación. Incluir actividades de relajación con apoyo externo.")
+
 
     # Renderizar
     template = get_template('evaluaciones/pdf_perfil_nino.html')
@@ -797,3 +818,112 @@ def obtener_medalla(juego_nombre, puntaje):
     elif juego_nombre == "Respira y Flota":
         return "🌟 Relax" if puntaje >= 3 else None
     return None
+
+@login_required
+def enviar_reporte_por_email(request, nino_id):
+    perfil = Perfil.objects.filter(user=request.user, rol='especialista').first()
+    if not perfil:
+        return HttpResponse("Acceso no autorizado", status=403)
+
+    especialista = Especialista.objects.get(perfil=perfil)
+    nino = get_object_or_404(Nino, id=nino_id)
+
+    # Renderizar PDF
+    intentos = IntentoJuego.objects.filter(nino=nino).select_related('juego')
+    resultados_ia = ResultadoIA.objects.filter(nino=nino).select_related('juego')
+    intentos_por_juego = {}
+    for intento in intentos:
+        nombre_juego = intento.juego.nombre
+        intentos_por_juego.setdefault(nombre_juego, []).append(intento)
+
+    medallas = {}
+    for juego, lista in intentos_por_juego.items():
+        mejor = max(i.resultado for i in lista)
+        medalla = obtener_medalla(juego, mejor)
+        if medalla:
+            medallas[juego] = medalla
+
+    recomendaciones = []
+
+    for r in resultados_ia:
+        juego = r.juego.nombre
+        pred = r.prediccion
+
+        if juego == "EmoMatch":
+            if pred == "TEA":
+                recomendaciones.append("🧩 Se identifican rasgos compatibles con TEA. Fomentar juegos que expresen emociones.")
+            elif pred == "Ansiedad/Depresión":
+                recomendaciones.append("😟 Posibles signos emocionales. Promover espacios de conversación y actividades de expresión.")
+            elif pred == "Discapacidad Intelectual":
+                recomendaciones.append("📚 Dificultad en reconocimiento emocional. Usar apoyos visuales simples.")
+            elif pred == "TDAH":
+                recomendaciones.append("🎯 Dificultades de enfoque en emociones. Combinar con dinámicas visuales y pausas activas.")
+
+        elif juego == "Atención Turbo":
+            if pred == "TDAH":
+                recomendaciones.append("⚡ Atención inestable. Implementar rutinas visuales y ejercicios de enfoque progresivo.")
+            elif pred == "Discapacidad Intelectual":
+                recomendaciones.append("🧠 Atención general limitada. Sugerimos adaptar tareas con apoyos visuales.")
+            elif pred == "Ansiedad/Depresión":
+                recomendaciones.append("😔 La atención podría verse afectada por el estado emocional. Promover ambientes tranquilos.")
+            elif pred == "TEA":
+                recomendaciones.append("🔁 Atención selectiva observada. Usar señales claras y estructuración de instrucciones.")
+
+        elif juego == "Mano Firme":
+            if pred == "Discapacidad Intelectual":
+                recomendaciones.append("🔧 Se sugiere reforzar motricidad fina. Usar actividades como recortes o modelado.")
+            elif pred == "TDAH":
+                recomendaciones.append("✋ Inestabilidad motora por impulsividad. Probar con trazados guiados y pausas.")
+            elif pred == "TEA":
+                recomendaciones.append("🖍️ Puede presentar rigidez en el trazo. Sugerimos usar herramientas sensoriales.")
+            elif pred == "Ansiedad/Depresión":
+                recomendaciones.append("📐 Motricidad afectada por estado anímico. Actividades suaves como pintar o plastilina.")
+
+        elif juego == "Respira y Flota":
+            if pred == "Ansiedad/Depresión":
+                recomendaciones.append("🌬️ Señales de tensión emocional. Practicar respiración guiada y relajación diaria.")
+            elif pred == "TEA":
+                recomendaciones.append("🧘 Dificultades para seguir ritmo. Reforzar rutinas con apoyo visual y auditivo.")
+            elif pred == "TDAH":
+                recomendaciones.append("🌀 Respiración agitada. Usar juegos de control respiratorio con tiempo y metas.")
+            elif pred == "Discapacidad Intelectual":
+                recomendaciones.append("📉 Limitaciones en autorregulación. Incluir actividades de relajación con apoyo externo.")
+
+    template = get_template('evaluaciones/pdf_perfil_nino.html')
+    html_string = template.render({
+        'nino': nino,
+        'intentos': intentos_por_juego,
+        'resultados_ia': resultados_ia,
+        'medallas': medallas,
+        'recomendaciones': recomendaciones,
+        'fecha': date.today()
+    })
+    pdf = HTML(string=html_string, base_url=request.build_absolute_uri()).write_pdf()
+
+    # Enviar correo
+    try:
+        subject = f"Informe de {nino.user.username} – NeuroKid"
+        body = "Adjunto encontrará el informe actualizado del desarrollo en NeuroKid.\n\nSaludos."
+        email = EmailMessage(subject, body, to=[nino.email])
+        email.attach(f"{nino.user.username}_informe.pdf", pdf, "application/pdf")
+        email.send()
+
+        LogEnvioReporte.objects.create(
+            especialista=especialista,
+            nino=nino,
+            metodo='email',
+            exito=True,
+            mensaje='Enviado correctamente.'
+        )
+        messages.success(request, f"Informe enviado a {nino.email} ✅")
+    except Exception as e:
+        LogEnvioReporte.objects.create(
+            especialista=especialista,
+            nino=nino,
+            metodo='email',
+            exito=False,
+            mensaje=str(e)
+        )
+        messages.error(request, f"No se pudo enviar el informe: {e}")
+
+    return redirect('perfil')

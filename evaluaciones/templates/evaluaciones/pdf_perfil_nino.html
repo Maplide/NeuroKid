@@ -170,14 +170,14 @@
 
   <!-- Recomendaciones -->
   {% if recomendaciones %}
-  <div class="section">
-    <h2>📌 Recomendaciones Personalizadas</h2>
-    {% for rec in recomendaciones %}
-    <div class="recomendacion">
-      {{ rec }}
+    <div class="section">
+      <h2>📌 Recomendaciones Personalizadas</h2>
+      {% for rec in recomendaciones %}
+        <div class="recomendacion">
+          {{ rec }}
+        </div>
+      {% endfor %}
     </div>
-    {% endfor %}
-  </div>
   {% endif %}
 
   <div class="footer">

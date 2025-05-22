@@ -34,4 +34,6 @@ urlpatterns = [
     path('perfil/pdf/', views.perfil_nino_pdf, name='perfil_nino_pdf'),
     path('perfil/pdf/<int:nino_id>/', views.perfil_nino_pdf_admin, name='perfil_nino_pdf_admin'),
     path('dashboard/pdf_global/', views.reporte_global_pdf, name='reporte_global_pdf'),
+
+    path('enviar-reporte/<int:nino_id>/', views.enviar_reporte_por_email, name='enviar_reporte_email'),
 ]
