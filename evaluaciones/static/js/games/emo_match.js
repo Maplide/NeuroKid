@@ -50,11 +50,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
           if (matchedPairs === totalPairs) {
             setTimeout(() => {
-              alert(`¡Terminaste! 🎉\nIntentos: ${tries}\nTiempo medio: ${avg} s`);
+              document.getElementById('finalHitsFirme').textContent = tries;
+              document.getElementById('finalMissesFirme').textContent = emojis.length - tries;
+
+              // Se guarda SIEMPRE, para invitados también
               registrarResultadoIA(tries, parseFloat(avg));
-              setTimeout(() => {
-                window.location.href = '/evaluaciones/perfil/';
-              }, 500);
+
+              // Mostramos el modal con botones controlados por el HTML
+              const endModal = new bootstrap.Modal(document.getElementById('endModal'));
+              endModal.show();
             }, 300);
           }
         } else {
